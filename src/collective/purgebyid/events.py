@@ -2,7 +2,6 @@ from ZPublisher.interfaces import IPubSuccess
 from ZPublisher.interfaces import IPubAfterTraversal
 from ZODB.POSException import ConflictError
 from zope.component import adapter
-# import collections
 import logging
 from collective.purgebyid.api import markInvolvedObjs
 
@@ -13,7 +12,9 @@ logger = logging.getLogger('collective.purgebyid')
 @adapter(IPubSuccess)
 def handle_request_success(event):
     """handle "IPubSuccess".
-    TODO: max header size
+    TODO: check max header size
+          varnish and apache max header length is 8k by default, uuid length
+          are 32 chars, so number of objects involved can reach approx 247...
     """
     request = event.request
     involved = getattr(request, 'involved', None)
@@ -25,6 +26,7 @@ def handle_request_success(event):
 @adapter(IPubAfterTraversal)
 def handle_request_after_traversal(event):
     """handle "IPubAfterTraversal".
+    TODO: all the objects traversed are involved or only the last?
     """
     try:
         markInvolvedObjs(event.request, event.request.get('PARENTS', []))
