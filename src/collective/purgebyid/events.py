@@ -27,11 +27,12 @@ def handle_request_after_traversal(event):
     """handle "IPubAfterTraversal".
     """
     try:
-        published = event.request.get('PUBLISHED', None)
-        if published:
-            context = getattr(published, 'context', None)
-            if context:
-                markInvolvedObjs(event.request, [context, ])
+        markInvolvedObjs(event.request, event.request.get('PARENTS', []))
+        # published = event.request.get('PUBLISHED', None)
+        # if published:
+        #     context = getattr(published, 'context', None)
+        #     if context:
+        #         markInvolvedObjs(event.request, [context, ])
     except ConflictError:
         raise
     except:

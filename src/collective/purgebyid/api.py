@@ -1,12 +1,10 @@
 from plone.uuid.interfaces import IUUID
-# from Acquisition import aq_base
 
 
 def markInvolvedObjs(request, objs):
     if objs:
         for obj in objs:
-            # aq_base ?
-            uuid = IUUID(obj)
+            uuid = IUUID(obj, None)
             if uuid:
                 markInvolved(request, uuid)
 
