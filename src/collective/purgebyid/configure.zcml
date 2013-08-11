@@ -1,0 +1,29 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    i18n_domain="collective.purgebyid">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <includeDependencies package="." />
+
+  <!--
+  <genericsetup:registerProfile
+      name="default"
+      title="collective.purgebyid"
+      directory="profiles/default"
+      description="Installs the collective.purgebyid package"
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+  -->
+
+  <!-- -*- extra stuff goes here -*- -->
+
+  <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
+
+  <subscriber handler=".events.handle_request_success" />
+  <subscriber handler=".events.handle_request_after_traversal" />
+
+</configure>
