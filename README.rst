@@ -1,7 +1,10 @@
+collective.purgebyid
+====================
+
 .. contents::
 
 Introduction
-============
+------------
 
 TODO.
 
