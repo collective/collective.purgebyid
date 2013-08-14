@@ -1,12 +1,7 @@
 collective.purgebyid
 ====================
 
-.. contents::
-
-Introduction
-------------
-
-TODO.
+...
 
 Varnish
 -------
