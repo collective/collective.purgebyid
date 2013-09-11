@@ -29,8 +29,8 @@ class CollectivepurgebyidLayer(PloneSandboxLayer):
 #        # Uninstall products installed above
 #        z2.uninstallProduct(app, 'Products.PloneFormGen')
 
-    def setUpPloneSite(self, portal):
-        applyProfile(portal, 'collective.purgebyid:default')
+    # def setUpPloneSite(self, portal):
+    #     applyProfile(portal, 'collective.purgebyid:default')
 
 COLLECTIVE_PURGEBYID_FIXTURE = CollectivepurgebyidLayer()
 COLLECTIVE_PURGEBYID_INTEGRATION_TESTING = IntegrationTesting(

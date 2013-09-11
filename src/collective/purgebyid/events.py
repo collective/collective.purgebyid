@@ -26,10 +26,16 @@ def handle_request_success(event):
 @adapter(IPubAfterTraversal)
 def handle_request_after_traversal(event):
     """handle "IPubAfterTraversal".
-    TODO: all the objects traversed are involved or only the last?
+
+       TODO: all the objects traversed are involved or only the last (the
+             firstest within request.PARENTS)?
     """
     try:
-        markInvolvedObjs(event.request, event.request.get('PARENTS', []))
+        markInvolvedObjs(
+            event.request,
+            event.request.get('PARENTS', []),
+            stoponfirst=True
+        )
         # published = event.request.get('PUBLISHED', None)
         # if published:
         #     context = getattr(published, 'context', None)
