@@ -4,8 +4,10 @@ Changelog
 1.0.0a2 (unreleased)
 --------------------
 
-- Nothing changed yet.
-
+- use zope.annotation on request
+  [mamico]
+- unused generic setup profile removed
+  [mamico]
 
 1.0.0a1 (2013-09-11)
 --------------------
