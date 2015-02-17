@@ -1,9 +1,13 @@
-from ZPublisher.interfaces import IPubSuccess
-from ZPublisher.interfaces import IPubAfterTraversal
-from ZODB.POSException import ConflictError
-from zope.component import adapter
+# -*- coding: utf-8 -*-
 import logging
+
+from ZODB.POSException import ConflictError
+from ZPublisher.interfaces import IPubAfterTraversal
+from ZPublisher.interfaces import IPubSuccess
+from zope.component import adapter
+
 from collective.purgebyid.api import markInvolvedObjs
+from collective.purgebyid.api import getInvolvedObjs
 
 
 logger = logging.getLogger('collective.purgebyid')
@@ -17,8 +21,8 @@ def handle_request_success(event):
           are 32 chars, so number of objects involved can reach approx 247...
     """
     request = event.request
-    involved = getattr(request, 'involved', None)
-    if involved:  # isinstance(involved, collections.Iterable):
+    involved = getInvolvedObjs(request)
+    if involved:
         event.request.response.setHeader(
             'X-Ids-Involved', '#' + '#'.join(involved) + '#')
 

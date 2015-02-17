@@ -9,18 +9,6 @@
 
   <includeDependencies package="." />
 
-  <!--
-  <genericsetup:registerProfile
-      name="default"
-      title="collective.purgebyid"
-      directory="profiles/default"
-      description="Installs the collective.purgebyid package"
-      provides="Products.GenericSetup.interfaces.EXTENSION"
-      />
-  -->
-
-  <!-- -*- extra stuff goes here -*- -->
-
   <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
 
   <subscriber handler=".events.handle_request_success" />

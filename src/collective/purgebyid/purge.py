@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from zope.interface import implements
 from zope.component import adapts
 from plone.uuid.interfaces import IUUIDAware

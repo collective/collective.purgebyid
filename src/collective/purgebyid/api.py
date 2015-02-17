@@ -1,9 +1,17 @@
+# -*- coding: utf-8 -*-
 import logging
-from plone.uuid.interfaces import IUUID
+
 from Acquisition import aq_base
+from plone.uuid.interfaces import IUUID
+from zope.annotation.interfaces import IAnnotations
 
-
+KEY = 'collective.purgebyid.involved'
 logger = logging.getLogger('collective.purgebyid')
+
+
+def getInvolvedObjs(request):
+    annotations = IAnnotations(request)
+    return annotations.get(KEY, None)
 
 
 def markInvolvedObjs(request, objs, stoponfirst=False):
@@ -41,7 +49,9 @@ def markInvolvedObjs(request, objs, stoponfirst=False):
 
 
 def markInvolved(request, id):
-    if not hasattr(request, 'involved'):
-        request.involved = set()
     logger.debug('mark request %r with %s' % (request, id))
-    request.involved.add(id)
+    annotations = IAnnotations(request)
+    if annotations.get(KEY, None):
+        annotations[KEY].add(id)
+    else:
+        annotations[KEY] = set([id])
