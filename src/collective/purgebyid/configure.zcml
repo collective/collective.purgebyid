@@ -11,6 +11,9 @@
 
   <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
 
+  <adapter factory=".adapter.ContentAdapter" />
+  <adapter factory=".adapter.ResourceDirectoryAdapter" />
+
   <subscriber handler=".events.handle_request_success" />
   <subscriber handler=".events.handle_request_after_traversal" />
 

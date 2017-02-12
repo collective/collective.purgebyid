@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from Acquisition import aq_base
-from plone.uuid.interfaces import IUUID
+from collective.purgebyid.interfaces import IInvolvedID
 from zope.annotation.interfaces import IAnnotations
 
 KEY = 'collective.purgebyid.involved'
+NOID = object()
 logger = logging.getLogger('collective.purgebyid')
 
 
@@ -28,30 +28,18 @@ def markInvolvedObjs(request, objs, stoponfirst=False):
     """
     if objs:
         for obj in objs:
-            uuid = None
-            if isinstance(obj, str):
-                uuid = obj
-            else:
-                # obj = getattr(obj, 'aq_base', obj)
-                obj = aq_base(obj)
-                if hasattr(obj, 'UID'):
-                    uuid = getattr(obj, 'UID')
-                    if callable(uuid):
-                        uuid = uuid()
-                    if not isinstance(uuid, str):
-                        uuid = None
-                if not uuid:
-                    uuid = IUUID(obj, None)
-            if uuid:
-                markInvolved(request, uuid)
+            id = IInvolvedID(obj, lambda o: None)()
+            if id:
+                markInvolved(request, id)
                 if stoponfirst:
                     break
 
 
 def markInvolved(request, id):
     logger.debug('mark request %r with %s' % (request, id))
-    annotations = IAnnotations(request)
-    if annotations.get(KEY, None):
-        annotations[KEY].add(id)
-    else:
-        annotations[KEY] = set([id])
+    if id is not NOID:
+        annotations = IAnnotations(request)
+        if annotations.get(KEY, None):
+            annotations[KEY].add(id)
+        else:
+            annotations[KEY] = set([id])

@@ -1,10 +1,14 @@
 Changelog
 =========
 
-1.0.1 (unreleased)
+1.1.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- added IIDinvolved adapter for easy implements "involved id" extractors
+  [mamico]
+- manage resourcedirectory, because previously all resources were marked as "involved" by
+  navigation root
+  [mamico]
 
 
 1.0.0 (2016-01-14)
