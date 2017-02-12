@@ -5,6 +5,7 @@ from collective.purgebyid.interfaces import IInvolvedID
 import hashlib
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
+from Products.ResourceRegistries.interfaces import IResourceRegistry
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
@@ -44,4 +45,10 @@ def resourceDirectoryAdapter(context):
     else:
         # ZODB persistent resources
         return NOID
-        
+
+
+@adapter(IResourceRegistry)
+@implementer(IInvolvedID)
+def resourceRegistryAdapter(context):
+    """portal_javascript, portal_css, ..."""
+    return NOID

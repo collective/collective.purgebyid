@@ -13,6 +13,7 @@
 
   <adapter factory=".adapter.contentAdapter" />
   <adapter factory=".adapter.resourceDirectoryAdapter" />
+  <adapter factory=".adapter.resourceRegistryAdapter" />
 
   <subscriber handler=".events.handle_request_success" />
   <subscriber handler=".events.handle_request_after_traversal" />
