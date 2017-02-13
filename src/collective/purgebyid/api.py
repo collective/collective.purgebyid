@@ -28,9 +28,12 @@ def markInvolvedObjs(request, objs, stoponfirst=False):
     """
     if objs:
         for obj in objs:
-            id = IInvolvedID(obj, None)
-            if id:
-                markInvolved(request, id)
+            ids = IInvolvedID(obj, None)
+            if ids:
+                if isinstance(ids, basestring) or ids is NOID:
+                    ids = [ids]
+                for id in ids:
+                    markInvolved(request, id)
                 if stoponfirst:
                     break
 
