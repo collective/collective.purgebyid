@@ -9,6 +9,8 @@ Changelog
 - manage resourcedirectory, because previously all resources were marked as "involved" by
   navigation root
   [mamico]
+- fix issue where IUUID-adaptation did not have default value
+  [datakurre]
 
 
 1.0.0 (2016-01-14)
