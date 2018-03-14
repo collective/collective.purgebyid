@@ -17,6 +17,6 @@ class UuidPurgePath(object):
         return []
 
     def getAbsolutePaths(self):
-        uuid = IUUID(self.context)
+        uuid = IUUID(self.context, None)
         if uuid:
             yield '/@@purgebyid/%s' % uuid
