@@ -3,7 +3,9 @@ Changelog
 
 1.1.0 (unreleased)
 ------------------
-
+- moved headers mutator from PubSuccess event to plone.transformchain.
+  fix missing header using p.a.caching's ramcache operations #2
+  [mamico]
 - added IIDinvolved adapter for easy implements "involved id" extractors
   [mamico]
 - manage resourcedirectory, because previously all resources were marked as "involved" by
