@@ -15,7 +15,9 @@
   <adapter factory=".adapter.resourceDirectoryAdapter" />
   <adapter factory=".adapter.resourceRegistryAdapter" />
 
-  <subscriber handler=".events.handle_request_success" />
+  <!-- Mutator: plone.transformchain order 11000 -->
+  <adapter factory=".events.MutatorTransform" name="collective.purgebyid.mutator" />
+
   <subscriber handler=".events.handle_request_after_traversal" />
 
 </configure>
