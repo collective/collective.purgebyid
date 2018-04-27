@@ -49,5 +49,4 @@ Config example::
 References
 ----------
 
- `Blog post (italian language)
-<http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid>`_.
+ * Blog post http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language) 
