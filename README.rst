@@ -45,3 +45,9 @@ Config example::
         unset resp.http.x-ids-involved;
     }
 
+
+References
+----------
+
+ `Blog post (italian language)
+<http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid>`_.
