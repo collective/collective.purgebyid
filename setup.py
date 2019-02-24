@@ -42,6 +42,7 @@ setup(name='collective.purgebyid',
       install_requires=[
           'setuptools',
           # -*- Extra requirements: -*-
+          'plone.uuid',
       ],
       extras_require={'test': ['plone.app.testing']},
       entry_points="""

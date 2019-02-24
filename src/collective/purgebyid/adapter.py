@@ -1,14 +1,23 @@
 # -*- coding: utf-8 -*-
+import hashlib
+import pkg_resources
+
 from Acquisition import aq_base
 from collective.purgebyid.api import NOID
 from collective.purgebyid.interfaces import IInvolvedID
-import hashlib
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
-from Products.ResourceRegistries.interfaces import IResourceRegistry
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
+
+try:
+    pkg_resources.get_distribution('Products.ResourceRegistries')
+    from Products.ResourceRegistries.interfaces import IResourceRegistry
+except pkg_resources.DistributionNotFound:
+    HAS_RESOURCEREGISTRY = False
+else:
+    HAS_RESOURCEREGISTRY = True
 
 
 @adapter(Interface)
@@ -47,8 +56,9 @@ def resourceDirectoryAdapter(context):
         return NOID
 
 
-@adapter(IResourceRegistry)
-@implementer(IInvolvedID)
-def resourceRegistryAdapter(context):
-    """portal_javascript, portal_css, ..."""
-    return NOID
+if HAS_RESOURCEREGISTRY:
+    @adapter(IResourceRegistry)
+    @implementer(IInvolvedID)
+    def resourceRegistryAdapter(context):
+        """portal_javascript, portal_css, ..."""
+        return NOID

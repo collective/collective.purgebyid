@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-from zope.interface import implements
+from zope.interface import implementer
 from zope.component import adapts
 from plone.uuid.interfaces import IUUIDAware
 from z3c.caching.interfaces import IPurgePaths
 from plone.uuid.interfaces import IUUID
 
 
+@implementer(IPurgePaths)
 class UuidPurgePath(object):
-    implements(IPurgePaths)
     adapts(IUUIDAware)
 
     def __init__(self, context):
