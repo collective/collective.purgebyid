@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from builtins import str
+from past.builtins import basestring
 from collective.purgebyid.interfaces import IInvolvedID
 from zope.annotation.interfaces import IAnnotations
 
@@ -31,7 +31,7 @@ def markInvolvedObjs(request, objs, stoponfirst=False):
         for obj in objs:
             ids = IInvolvedID(obj, None)
             if ids:
-                if isinstance(ids, str) or ids is NOID:
+                if isinstance(ids, basestring) or ids is NOID:
                     ids = [ids]
                 for id in ids:
                     markInvolved(request, id)
