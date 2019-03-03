@@ -26,6 +26,8 @@ pip-selfcheck.json
 .coverage
 .tox
 nosetests.xml
+coverage.xml
+htmlcov
 
 # Translations
 *.mo
@@ -38,3 +40,5 @@ nosetests.xml
 # virtualenv
 include
 local
+share
+
