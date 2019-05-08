@@ -26,9 +26,6 @@ before_install:
 install:
   - pip install -r requirements-$PLONE_VERSION.txt
   - buildout -Nc plone-$PLONE_VERSION.cfg
-before_script:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
 script:
   - bin/code-analysis
   - bin/test
@@ -40,4 +37,5 @@ after_failure:
   - bin/csslint --version
   - bin/jshint --version
   - bin/jscs --version
-  - firefox -v
+notifications:
+  email: false
