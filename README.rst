@@ -1,11 +1,20 @@
 collective.purgebyid
 ====================
 
+.. image:: https://img.shields.io/pypi/v/collective.purgebyid.svg
+    :target: https://pypi.python.org/pypi/collective.purgebyid/
+    :alt: Latest Version
 
-.. image:: https://travis-ci.org/collective/collective.purgebyid.svg?branch=master
-    :alt: Travis CI badge
-    :target: http://travis-ci.org/collective/collective.purgebyid
+.. image:: https://img.shields.io/pypi/pyversions/collective.purgebyid.svg?style=plastic   
+     :alt: Supported - Python Versions
 
+.. image:: https://img.shields.io/pypi/l/collective.purgebyid.svg
+    :target: https://pypi.python.org/pypi/collective.purgebyid/
+    :alt: License
+
+.. image:: https://github.com/collective/collective.purgebyid/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/collective/collective.purgebyid/actions
+    :alt: Tests
 
 collective.purgbyid is a new method for cache invalidation of Plone
 based web sites. It uses the idea of adding an extra header, called
