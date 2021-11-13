@@ -8,8 +8,6 @@
 
   <five:registerPackage package="." initialize=".initialize" />
 
-  <includeDependencies package="." />
-
   <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
 
   <adapter factory=".adapter.contentAdapter" />

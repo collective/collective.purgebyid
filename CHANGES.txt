@@ -4,8 +4,8 @@ Changelog
 1.1.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Remove unused importDependencies (for pip install compatibility).
+  [cekk]
 
 1.1.1 (2019-06-05)
 ------------------
