@@ -1,3 +1,18 @@
+[run]
+relative_files = True
+
 [report]
 include =
-    src/*
+    src/collective/*
+omit =
+    */test*
+    /home/*/.buildout/eggs/*
+    /home/travis/buildout-cache/eggs/*
+    /home/travis/virtualenv/*
+    /usr/*
+    bin/test
+    eggs/*
+    parts/*
+    */lib/*
+    *.txt
+    *.rst

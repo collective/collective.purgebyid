@@ -42,11 +42,11 @@ class MutatorTransform(object):
         self.published = published
         self.request = request
 
-    def transformUnicode(self, result, encoding):
+    def transformUnicode(self, result, encoding):  # pragma: nocover
         self.mutate()
         return None
 
-    def transformBytes(self, result, encoding):
+    def transformBytes(self, result, encoding):  # pragma: nocover
         self.mutate()
         return None
 
@@ -80,8 +80,8 @@ def handle_request_after_traversal(event):
         #     context = getattr(published, 'context', None)
         #     if context:
         #         markInvolvedObjs(event.request, [context, ])
-    except ConflictError:
+    except ConflictError:  # pragma: nocover
         raise
-    except:
+    except:  # pragma: nocover
         logger.exception(
             "Swallowed exception in IPubAfterTraversal event handler")
