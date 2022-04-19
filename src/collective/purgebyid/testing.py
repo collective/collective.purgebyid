@@ -21,6 +21,7 @@ class CollectivepurgebyidLayer(PloneSandboxLayer):
             context=configurationContext
         )
 
+
 COLLECTIVE_PURGEBYID_FIXTURE = CollectivepurgebyidLayer()
 COLLECTIVE_PURGEBYID_INTEGRATION_TESTING = IntegrationTesting(
     bases=(COLLECTIVE_PURGEBYID_FIXTURE,),

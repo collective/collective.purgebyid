@@ -82,6 +82,6 @@ def handle_request_after_traversal(event):
         #         markInvolvedObjs(event.request, [context, ])
     except ConflictError:  # pragma: nocover
         raise
-    except:  # pragma: nocover
+    except Exception:  # pragma: nocover
         logger.exception(
             "Swallowed exception in IPubAfterTraversal event handler")
