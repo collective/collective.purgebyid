@@ -45,15 +45,16 @@ Varnish
 Config example::
 
     sub vcl_recv {
-        if (req.request == "PURGE") {
-            if (!client.ip ~ purge) {
-                error 405 "Not allowed.";
-            }
-            if (req.url ~ "^/@@purgebyid/") {
-                ban("obj.http.x-ids-involved ~ #" + regsub(req.url, "^/@@purgebyid/", "") + "#");
-                error 200 "Ban added";
-            }
+      if (req.method == "PURGE") {
+         if (!client.ip ~ purge) {
+            return (synth(405, "This IP is not allowed to send PURGE requests."));
+         }
+         if (req.url ~ "^/@@purgebyid/") {
+            ban("obj.http.x-ids-involved ~ #" + regsub(req.url, "^/@@purgebyid/", "") + "#");
+            return(synth(200, "Ban added"));
         }
+        return(purge);
+      }
     }
 
     sub vcl_deliver {
