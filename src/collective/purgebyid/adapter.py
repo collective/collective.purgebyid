@@ -50,7 +50,7 @@ def contentAdapter(obj):
 def resourceDirectoryAdapter(context):
     if hasattr(context, 'directory'):
         # file system resources
-        return hashlib.sha1(context.directory.encode('utf-8')).hexdigest()
+        return hashlib.sha1(context.directory.encode('utf-8')).hexdigest()  # nosec
     else:
         # ZODB persistent resources
         return NOID
