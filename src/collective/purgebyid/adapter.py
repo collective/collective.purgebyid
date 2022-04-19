@@ -13,11 +13,11 @@ from zope.interface import Interface
 
 try:
     pkg_resources.get_distribution('Products.ResourceRegistries')
-    from Products.ResourceRegistries.interfaces import IResourceRegistry
+    from Products.ResourceRegistries.interfaces import IResourceRegistry  # pragma: nocover
 except pkg_resources.DistributionNotFound:
     HAS_RESOURCEREGISTRY = False
 else:
-    HAS_RESOURCEREGISTRY = True
+    HAS_RESOURCEREGISTRY = True  # pragma: nocover
 
 
 @adapter(Interface)
@@ -50,7 +50,7 @@ def contentAdapter(obj):
 def resourceDirectoryAdapter(context):
     if hasattr(context, 'directory'):
         # file system resources
-        return hashlib.sha1(context.directory.encode('utf-8')).hexdigest()
+        return hashlib.sha1(context.directory.encode('utf-8')).hexdigest()  # nosec
     else:
         # ZODB persistent resources
         return NOID

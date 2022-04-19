@@ -15,9 +15,9 @@ jobs:
         - ["2.7",   "plone50-py27"]
         - ["2.7",   "plone51-py27"]
         - ["2.7",   "plone52-py27"]
-        - ["3.6",   "plone52-py36"]
         - ["3.7",   "plone52-py37"]
         - ["3.8",   "plone52-py38"]
+        - ["3.9",   "plone52-py39"]
     runs-on: ubuntu-latest
     name: ${{ matrix.config[1] }}
     steps:
@@ -40,3 +40,18 @@ jobs:
         pip install tox
     - name: Test
       run: tox -e ${{ matrix.config[1] }}
+    - name: Coveralls
+      uses: AndreMiras/coveralls-python-action@develop
+      with:
+        parallel: true
+        flag-name: ${{ matrix.config[1] }}
+
+  coveralls_finish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Coveralls Finished
+      uses: AndreMiras/coveralls-python-action@develop
+      with:
+        parallel-finished: true
+
