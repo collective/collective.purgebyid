@@ -26,22 +26,22 @@ def contentAdapter(obj):
     """return uid for context.
 
     * the object is a string
+    * the object implements IUUID
     * the object has a UID attribute that is a string (e.g. a catalog
       brain, AT object, ...
-    * the object implements IUUID
     """
     uuid = None
     if isinstance(obj, str):
         return obj
     obj = aq_base(obj)
-    if hasattr(obj, 'UID'):
-        uuid = getattr(obj, 'UID')
-        if callable(uuid):
-            uuid = uuid()
-        if not isinstance(uuid, str):
-            uuid = None
-    if not uuid:
-        uuid = IUUID(obj, None)
+    uuid = IUUID(obj, None)
+    if uuid is None:
+        if hasattr(obj, 'UID'):
+            uuid = getattr(obj, 'UID')
+            if callable(uuid):
+                uuid = uuid()
+            if not isinstance(uuid, str):
+                uuid = None
     return uuid
 
 
