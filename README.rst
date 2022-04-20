@@ -16,6 +16,10 @@ collective.purgebyid
     :target: https://github.com/collective/collective.purgebyid/actions
     :alt: Tests
 
+.. image:: https://coveralls.io/repos/github/collective/collective.purgebyid/badge.svg?branch=master
+    :target: https://coveralls.io/github/collective/collective.purgebyid?branch=master
+    :alt: Coverage
+
 collective.purgbyid is a new method for cache invalidation of Plone
 based web sites. It uses the idea of adding an extra header, called
 X-Ids-Involved, which contains thee uuids of the objects involved in the
