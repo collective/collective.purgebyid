@@ -1,8 +1,11 @@
-varnishtest "Test xkey vmod"
+varnishtest "Test xkey vmod using X-Ids-Involved header"
 
 server s1 {
 	rxreq
-	txresp -hdr "xkey: asdf"
+	txresp -hdr "XKey: c8d7c0bc2b794325b916d990de91d7ee foo" -hdr "X-RespId: 1"
+
+	rxreq
+	txresp -hdr "XKey: c8d7c0bc2b794325b916d990de91d7ee bar" -hdr "X-RespId: 2"
 
 } -start
 
@@ -10,11 +13,14 @@ varnish v1 -vcl+backend {
 	import xkey;
 
 	sub vcl_recv {
-		if (req.http.xkey-purge) {
-			if (xkey.purge(req.http.xkey-purge) != 0) {
-				return (synth(200, "Purged"));
-			} else {
-				return (synth(404, "No key"));
+		if (req.method == "PURGE") {
+			if (req.url ~ "^/@@purgebyid/") {
+				set req.http.n-gone = xkey.purge(regsub(req.url, "^/@@purgebyid/", ""));
+				if (req.http.n-gone != "0") {
+					return (synth(200, "Invalidated "+req.http.n-gone+" objects"));
+				} else {
+					return (synth(404, "No key"));
+				}
 			}
 		}
 	}
@@ -30,21 +36,40 @@ varnish v1 -vcl+backend {
 	}
 } -start
 
-# First check xkey header
 client c1 {
 	txreq
 	rxresp
+	expect resp.http.Age == 0
+	expect resp.http.X-RespId == 1
 } -run
+
+delay 1
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.http.Age > 0
+	expect resp.http.X-RespId == 1
+} -run
+
+delay 1
 
 varnish v1 -expect n_object == 1
 
 client c1 {
-	txreq -hdr "xkey-purge: asdf"
+	txreq -req PURGE -url /@@purgebyid/c8d7c0bc2b794325b916d990de91d7ee
 	rxresp
 	expect resp.status == 200
-	expect resp.http.reason == "Purged"
+	expect resp.http.reason == "Invalidated 1 objects"
 } -run
 
 delay 1
 
 varnish v1 -expect n_object == 0
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.http.Age == 0
+	expect resp.http.X-RespId == 2
+} -run
