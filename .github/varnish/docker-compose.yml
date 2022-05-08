@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  varnish: &default
+    image: ghcr.io/mamico/varnish-docker:latest
+    volumes:
+      - ./default.vcl:/etc/varnish/default.vcl
+      - ./tests:/tests
+
+  ci:
+    <<: *default
+    command: /tests/test_all.sh

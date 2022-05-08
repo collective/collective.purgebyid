@@ -1,0 +1,69 @@
+varnishtest "Test without xkey vmod, object are banned not purged"
+
+server s1 {
+	rxreq
+	txresp -hdr "X-Ids-Involved: #c8d7c0bc2b794325b916d990de91d7ee#" -hdr "X-RespId: 1"
+
+	rxreq
+	txresp -hdr "X-Ids-Involved: #c8d7c0bc2b794325b916d990de91d7ee#" -hdr "X-RespId: 2"
+
+} -start
+
+varnish v1 -vcl+backend {
+	sub vcl_recv {
+		if (req.method == "PURGE") {
+        	if (req.url ~ "^/@@purgebyid/") {
+            	ban("obj.http.x-ids-involved ~ #" + regsub(req.url, "^/@@purgebyid/", "") + "#");
+            	return(synth(200, "Ban added"));
+        	}
+		}
+	}
+
+	sub vcl_backend_response {
+		set beresp.ttl = 60s;
+		set beresp.grace = 0s;
+		set beresp.keep = 0s;
+	}
+
+	sub vcl_synth {
+		set resp.http.reason = resp.reason;
+	}
+} -start
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.http.Age == 0
+	expect resp.http.X-RespId == 1
+} -run
+
+delay 1
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.http.Age > 0
+	expect resp.http.X-RespId == 1
+} -run
+
+delay 1
+
+varnish v1 -expect n_object == 1
+
+client c1 {
+	txreq -req PURGE -url /@@purgebyid/c8d7c0bc2b794325b916d990de91d7ee
+	rxresp
+	expect resp.status == 200
+	expect resp.http.reason == "Ban added"
+} -run
+
+delay 1
+
+varnish v1 -expect n_object == 1
+
+client c1 {
+	txreq
+	rxresp
+	expect resp.http.Age == 0
+	expect resp.http.X-RespId == 2
+} -run
