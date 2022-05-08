@@ -5,7 +5,7 @@ collective.purgebyid
     :target: https://pypi.python.org/pypi/collective.purgebyid/
     :alt: Latest Version
 
-.. image:: https://img.shields.io/pypi/pyversions/collective.purgebyid.svg?style=plastic   
+.. image:: https://img.shields.io/pypi/pyversions/collective.purgebyid.svg?style=plastic
      :alt: Supported - Python Versions
 
 .. image:: https://img.shields.io/pypi/l/collective.purgebyid.svg
@@ -22,7 +22,7 @@ collective.purgebyid
 
 collective.purgbyid is a new method for cache invalidation of Plone
 based web sites. It uses the idea of adding an extra header, called
-X-Ids-Involved, which contains thee uuids of the objects involved in the
+X-Ids-Involved, which contains the uuids of the objects involved in the
 construction of the resources. For example, an image contains just its
 uuid::
 
@@ -41,10 +41,16 @@ of the right type (i.e. containing the uuid of the resource to purge).
 This means that when a resources is purged, it is enough to purge also
 it /@@purgebyid/<UUID> URL because it will be Varnish responsibily to
 also catch all of the occurrencies of the resources whenever the URL
-which is used to access it. 
+which is used to access it.
 
-Varnish
--------
+Varnish without xkey varnish module
+-----------------------------------
+
+Without the xkey module, the way to purge a resource is to ban all objects
+which have the X-Ids-Involved header with the id of the resource to be purged.
+
+For a better understanding of the differences between the two approaches, please read:
+https://varnish-cache.org/docs/trunk/users-guide/purging.html
 
 Config example::
 
@@ -66,7 +72,48 @@ Config example::
     }
 
 
+Varnish with xkey varnish module
+--------------------------------
+
+By default, Varnish uses the URL as the hash key for purging, but with
+the xkey module (https://github.com/varnish/varnish-modules/blob/master/src/vmod_xkey.vcc)
+there comes a secondary hash for doing so. Cached objects
+being tagged can be specifically purged for a more targeted cache control.
+
+To have xkey working, it is mandatory to provide a special HTTP header called
+"Xkey" which contains all the tags (separated by white-space). Few additional codes in
+the `vcl_backend_response` transforms the X-Ids-Involved header header into an XKey.
+
+Config example::
+
+    import xkey;
+
+    sub vcl_recv {
+        if (req.method == "PURGE") {
+            if (!client.ip ~ purge) {
+                return (synth(405, "This IP is not allowed to send PURGE requests."));
+            }
+            if (req.url ~ "^/@@purgebyid/") {
+                set req.http.n-gone = xkey.purge(regsub(req.url, "^/@@purgebyid/", ""));
+                return (synth(200, "Invalidated "+req.http.n-gone+" objects"));
+            }
+        }
+        return(purge);
+    }
+
+    sub vcl_backend_response {
+        if (beresp.http.x-ids-involved) {
+            set beresp.http.xkey = regsuball(beresp.http.x-ids-involved, "#", " ");
+        }
+    }
+
+    sub vcl_deliver {
+        unset resp.http.x-ids-involved;
+        unset resp.http.xkey;
+    }
+
+
 References
 ----------
 
-* Blog post http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language) 
+* Blog post http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language)
