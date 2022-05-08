@@ -1,0 +1,22 @@
+name: vcl tests
+
+on:
+  push:
+    branches:
+      - master
+      - varnishtest
+  pull_request:
+
+jobs:
+   test:
+    name: Run test suite
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build container
+      run: docker-compose -f .github/varnish/docker-compose.yml build
+
+    - name: Run tests
+      run: docker-compose -f .github/varnish/docker-compose.yml run ci
