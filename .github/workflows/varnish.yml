@@ -2,7 +2,9 @@ name: vcl tests
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - master
+      - varnishtest
   pull_request:
 
 jobs:
