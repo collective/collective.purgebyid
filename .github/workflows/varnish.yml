@@ -15,11 +15,8 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Run shellcheck tests
-      run: shellcheck alf
-
-    - name: Build container for approval tests
+    - name: Build container
       run: docker-compose -f .github/varnish/docker-compose.yml build
 
-    - name: Run approval tests
+    - name: Run tests
       run: docker-compose -f .github/varnish/docker-compose.yml run ci
