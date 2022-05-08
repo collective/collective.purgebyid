@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-import logging
-
-from past.builtins import basestring
 from collective.purgebyid.interfaces import IInvolvedID
+from past.builtins import basestring
 from zope.annotation.interfaces import IAnnotations
 
-KEY = 'collective.purgebyid.involved'
+import logging
+
+
+KEY = "collective.purgebyid.involved"
 NOID = object()
-logger = logging.getLogger('collective.purgebyid')
+logger = logging.getLogger("collective.purgebyid")
 
 
 def getInvolvedObjs(request):
@@ -40,7 +41,7 @@ def markInvolvedObjs(request, objs, stoponfirst=False):
 
 
 def markInvolved(request, id):
-    logger.debug('mark request %r with %s' % (request, id))
+    logger.debug("mark request %r with %s" % (request, id))
     if id is not NOID:
         annotations = IAnnotations(request)
         if annotations.get(KEY, None):

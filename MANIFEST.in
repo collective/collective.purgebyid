@@ -1,15 +1,5 @@
+graft docs
+graft src
 include *.txt
-
-recursive-include docs *
-recursive-include src *
-
-global-exclude *pyc
-
- exclude .coveragerc
- exclude bootstrap.py
- exclude buildout.cfg
- exclude plone-4.3.x.cfg
- exclude plone-5.0.x.cfg
- exclude plone-5.1.x.cfg
- exclude plone-5.2.x.cfg
- exclude tox.ini
+include *.rst
+global-exclude *.pyc

@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
-import logging
-
+from collective.purgebyid.api import getInvolvedObjs
+from collective.purgebyid.api import markInvolvedObjs
+from plone.transformchain.interfaces import ITransform
 from ZODB.POSException import ConflictError
-from ZPublisher.interfaces import IPubAfterTraversal
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
-from plone.transformchain.interfaces import ITransform
+from ZPublisher.interfaces import IPubAfterTraversal
 
-from collective.purgebyid.api import markInvolvedObjs
-from collective.purgebyid.api import getInvolvedObjs
+import logging
 
 
-logger = logging.getLogger('collective.purgebyid')
+logger = logging.getLogger("collective.purgebyid")
 
 
 @implementer(ITransform)
@@ -58,22 +57,19 @@ class MutatorTransform(object):
         request = self.request
         involved = getInvolvedObjs(request)
         if involved:
-            request.response.setHeader(
-                'X-Ids-Involved', '#' + '#'.join(involved) + '#')
+            request.response.setHeader("X-Ids-Involved", "#" + "#".join(involved) + "#")
 
 
 @adapter(IPubAfterTraversal)
 def handle_request_after_traversal(event):
     """handle "IPubAfterTraversal".
 
-       TODO: all the objects traversed are involved or only the last (the
-             firstest within request.PARENTS)?
+    TODO: all the objects traversed are involved or only the last (the
+          firstest within request.PARENTS)?
     """
     try:
         markInvolvedObjs(
-            event.request,
-            event.request.get('PARENTS', []),
-            stoponfirst=True
+            event.request, event.request.get("PARENTS", []), stoponfirst=True
         )
         # published = event.request.get('PUBLISHED', None)
         # if published:
@@ -83,5 +79,4 @@ def handle_request_after_traversal(event):
     except ConflictError:  # pragma: nocover
         raise
     except Exception:  # pragma: nocover
-        logger.exception(
-            "Swallowed exception in IPubAfterTraversal event handler")
+        logger.exception("Swallowed exception in IPubAfterTraversal event handler")

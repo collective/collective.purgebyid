@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-from zope.interface import implementer
-from zope.component import adapter
+from plone.uuid.interfaces import IUUID
 from plone.uuid.interfaces import IUUIDAware
 from z3c.caching.interfaces import IPurgePaths
-from plone.uuid.interfaces import IUUID
+from zope.component import adapter
+from zope.interface import implementer
 
 
 @implementer(IPurgePaths)
 @adapter(IUUIDAware)
 class UuidPurgePath(object):
-
     def __init__(self, context):
         self.context = context
 
@@ -19,4 +18,4 @@ class UuidPurgePath(object):
     def getAbsolutePaths(self):
         uuid = IUUID(self.context, None)
         if uuid:
-            yield '/@@purgebyid/%s' % uuid
+            yield "/@@purgebyid/%s" % uuid

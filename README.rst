@@ -82,7 +82,7 @@ being tagged can be specifically purged for a more targeted cache control.
 
 To have xkey working, it is mandatory to provide a special HTTP header called
 "Xkey" which contains all the tags (separated by white-space). Few additional codes in
-the `vcl_backend_response` transforms the X-Ids-Involved header header into an XKey.
+the `vcl_backend_response` transforms the X-Ids-Involved header into an XKey.
 
 Config example::
 
