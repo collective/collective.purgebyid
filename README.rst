@@ -95,6 +95,7 @@ Config example::
             }
             if (req.url ~ "^/@@purgebyid/") {
                 set req.http.n-gone = xkey.purge(regsub(req.url, "^/@@purgebyid/", ""));
+                # or: set req.http.n-gone = xkey.softpurge(regsub(req.url, "^/@@purgebyid/", ""));
                 return (synth(200, "Invalidated "+req.http.n-gone+" objects"));
             }
         }
@@ -112,6 +113,10 @@ Config example::
         unset resp.http.xkey;
     }
 
+
+A softpurge differs from a regular purge in that it resets an
+object's TTL but keeps it available for grace mode and conditional
+requests for the remainder of its configured grace and keep time.
 
 References
 ----------
