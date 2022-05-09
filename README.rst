@@ -49,7 +49,7 @@ Varnish without xkey varnish module
 Without the xkey module, the way to purge a resource is to ban all objects
 which have the X-Ids-Involved header with the id of the resource to be purged.
 
-For a better understanding of the differences between the two approaches, please read:
+For a better understanding of the differences between the two approaches (ban vs. purge), please read:
 https://varnish-cache.org/docs/trunk/users-guide/purging.html
 
 Config example::
