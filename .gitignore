@@ -28,6 +28,7 @@ pip-selfcheck.json
 nosetests.xml
 coverage.xml
 htmlcov
+coverage.json
 
 # Translations
 *.mo
@@ -36,9 +37,11 @@ htmlcov
 .mr.developer.cfg
 .project
 .pydevproject
+pyvenv.cfg
 
 # virtualenv
 include
 local
 share
+.vscode
 

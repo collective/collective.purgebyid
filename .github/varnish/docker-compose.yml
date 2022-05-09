@@ -4,7 +4,7 @@ services:
   varnish: &default
     image: ghcr.io/mamico/varnish-docker:latest
     volumes:
-      - ./default.vcl:/etc/varnish/default.vcl
+      # - ./default.vcl:/etc/varnish/default.vcl
       - ./tests:/tests
 
   ci:
