@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - varnishtest
   pull_request:
 
 jobs:
