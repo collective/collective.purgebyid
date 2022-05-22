@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from collective.purgebyid.interfaces import IInvolvedID
 from collective.purgebyid import logger
+from collective.purgebyid.interfaces import IInvolvedID
 from past.builtins import basestring
 from zope.annotation.interfaces import IAnnotations
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from collective.purgebyid import logger
 from collective.purgebyid.api import getInvolvedObjs
 from collective.purgebyid.api import markInvolvedObjs
-from collective.purgebyid import logger
 from plone.transformchain.interfaces import ITransform
 from ZODB.POSException import ConflictError
 from zope.component import adapter

@@ -13,9 +13,7 @@ import pkg_resources
 
 try:
     pkg_resources.get_distribution("Products.ResourceRegistries")
-    from Products.ResourceRegistries.interfaces import (
-        IResourceRegistry,
-    )  # pragma: nocover
+    from Products.ResourceRegistries.interfaces import IResourceRegistry  # pragma: nocover
 except pkg_resources.DistributionNotFound:
     HAS_RESOURCEREGISTRY = False
 else:

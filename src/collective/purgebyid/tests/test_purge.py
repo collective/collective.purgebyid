@@ -182,7 +182,9 @@ class TestHelperView(unittest.TestCase):
         @adapter(Interface, IHTTPRequest)
         class CustomDocumentView(BrowserView):
             def __call__(self):
-                mark_involved_objects(self.request, api.content.find(portal_type="Document"))
+                mark_involved_objects(
+                    self.request, api.content.find(portal_type="Document")
+                )
                 return "OK"
 
         # register the view
