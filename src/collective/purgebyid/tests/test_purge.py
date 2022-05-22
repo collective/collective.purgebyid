@@ -86,6 +86,11 @@ class TestContentPurge(unittest.TestCase):
             provided=IInvolvedID,
         )
 
+    def test_resource(self):
+        browser = Browser(self.app)
+        browser.open(self.portal.absolute_url() + "/favicon.ico")
+        self.assertFalse("X-Ids-Involved" in browser.headers)
+
     def test_purge_content(self):
         document = api.content.create(
             title="Document", id="document", type="Document", container=self.portal
@@ -97,28 +102,38 @@ class TestContentPurge(unittest.TestCase):
         )
         self.assertEqual([], list(purger.getRelativePaths()))
 
-    def test_helper_view(self):
-        document = api.content.create(
+
+class TestHelperView(unittest.TestCase):
+
+    layer = COLLECTIVE_PURGEBYID_FUNCTIONAL_TESTING
+
+    def setUp(self):
+        self.app = self.layer["app"]
+        self.portal = self.layer["portal"]
+        setRequest(self.portal.REQUEST)
+        setRoles(self.portal, TEST_USER_ID, ("Manager",))
+        self.document = api.content.create(
             title="Document", id="document", type="Document", container=self.portal
         )
-        api.content.transition(document, to_state="published")
+        api.content.transition(self.document, to_state="published")
         # create a bunch of auxiliary objects
-        auxiliary_document = api.content.create(
+        self.auxiliary_document = api.content.create(
             title="Auxiliary document",
             id="auxiliary-document",
             type="Document",
             container=self.portal,
         )
-        api.content.transition(auxiliary_document, to_state="published")
-        auxiliary_document2 = api.content.create(
+        api.content.transition(self.auxiliary_document, to_state="published")
+        self.auxiliary_document2 = api.content.create(
             title="Auxiliary document",
             id="auxiliary-document2",
             type="Document",
             container=self.portal,
         )
-        api.content.transition(auxiliary_document2, to_state="published")
+        api.content.transition(self.auxiliary_document2, to_state="published")
         transaction.commit()
 
+    def test_helper_view_pt(self):
         # prepare a specialized view
         @adapter(Interface, IHTTPRequest)
         class CustomDocumentView(BrowserView):
@@ -144,16 +159,47 @@ class TestContentPurge(unittest.TestCase):
             name="special-view",
         )
         browser = Browser(self.app)
-        browser.open(document.absolute_url() + "/@@special-view")
+        browser.open(self.document.absolute_url() + "/@@special-view")
 
         self.assertTrue("X-Ids-Involved" in browser.headers)
         x_ids_header = browser.headers["X-Ids-Involved"]
-        self.assertIn(IUUID(document), x_ids_header)
-        self.assertIn(IUUID(auxiliary_document), x_ids_header)
+        self.assertIn(IUUID(self.document), x_ids_header)
+        self.assertIn(IUUID(self.auxiliary_document), x_ids_header)
         # auxiliary_document2 is marked in the template
-        self.assertIn(IUUID(auxiliary_document2), x_ids_header)
+        self.assertIn(IUUID(self.auxiliary_document2), x_ids_header)
         self.assertIn("custom-tag-from-view", x_ids_header)
         self.assertIn("custom-tag-from-template", x_ids_header)
+
+        # cleanup
+        gsm = getGlobalSiteManager()
+        gsm.unregisterAdapter(
+            factory=CustomDocumentView,
+            provided=IBrowserView,
+        )
+
+    def test_helper_view_catalog(self):
+        # prepare a specialized view
+        @adapter(Interface, IHTTPRequest)
+        class CustomDocumentView(BrowserView):
+            def __call__(self):
+                mark_involved_objects(self.request, api.content.find(portal_type="Document"))
+                return "OK"
+
+        # register the view
+        provideAdapter(
+            CustomDocumentView,
+            adapts=(Interface, IHTTPRequest),
+            provides=IBrowserView,
+            name="special-view",
+        )
+        browser = Browser(self.app)
+        browser.open(self.document.absolute_url() + "/@@special-view")
+
+        self.assertTrue("X-Ids-Involved" in browser.headers)
+        x_ids_header = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(self.document), x_ids_header)
+        self.assertIn(IUUID(self.auxiliary_document), x_ids_header)
+        self.assertIn(IUUID(self.auxiliary_document2), x_ids_header)
 
         # cleanup
         gsm = getGlobalSiteManager()

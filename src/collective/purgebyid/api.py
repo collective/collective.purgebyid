@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 from collective.purgebyid.interfaces import IInvolvedID
+from collective.purgebyid import logger
 from past.builtins import basestring
 from zope.annotation.interfaces import IAnnotations
-
-import logging
 
 
 KEY = "collective.purgebyid.involved"
 NOID = object()
-logger = logging.getLogger("collective.purgebyid")
 
 
 def getInvolvedObjs(request):
@@ -32,12 +30,12 @@ def mark_involved_objects(request, objs, stoponfirst=False):
         else:
             ids = IInvolvedID(obj, None)
         if ids:
-            if ids is NOID:
+            if ids is NOID:  # pragma: nocover
                 logger.warning(
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
                 ids = []
-            if isinstance(ids, basestring):
+            if isinstance(ids, basestring):  # pragma: nocover
                 logger.warning(
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
@@ -56,7 +54,7 @@ def mark_involved(request, id):
     :type single_id: basestring
     """
     logger.debug("mark request %r with %s", request, id)
-    if id is NOID:
+    if id is NOID:  # pragma: nocover
         return
     annotations = IAnnotations(request)
     if annotations.get(KEY, None):

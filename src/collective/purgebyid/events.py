@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 from collective.purgebyid.api import getInvolvedObjs
 from collective.purgebyid.api import markInvolvedObjs
+from collective.purgebyid import logger
 from plone.transformchain.interfaces import ITransform
 from ZODB.POSException import ConflictError
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 from ZPublisher.interfaces import IPubAfterTraversal
-
-import logging
-
-
-logger = logging.getLogger("collective.purgebyid")
 
 
 @implementer(ITransform)
