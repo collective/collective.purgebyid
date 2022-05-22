@@ -41,7 +41,7 @@ class TestContentPurge(unittest.TestCase):
 
     def test_header_published(self):
         """Test if the headers are published."""
-        # setRoles(self.portal, TEST_USER_ID, ("Manager",))
+        setRoles(self.portal, TEST_USER_ID, ("Manager",))
         document = api.content.create(
             title="Document", id="document", type="Document", container=self.portal
         )
