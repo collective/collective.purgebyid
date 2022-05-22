@@ -18,6 +18,9 @@ class CollectivepurgebyidLayer(PloneSandboxLayer):
             "configure.zcml", collective.purgebyid, context=configurationContext
         )
 
+    def setUpPloneSite(self, portal):
+        portal["portal_workflow"].setDefaultChain("simple_publication_workflow")
+
 
 COLLECTIVE_PURGEBYID_FIXTURE = CollectivepurgebyidLayer()
 COLLECTIVE_PURGEBYID_INTEGRATION_TESTING = IntegrationTesting(

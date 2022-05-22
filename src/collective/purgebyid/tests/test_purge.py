@@ -1,106 +1,163 @@
 # -*- coding: utf-8 -*-
-from Acquisition import aq_base
-from Acquisition import Explicit
+from collective.purgebyid.api import mark_involved
+from collective.purgebyid.api import mark_involved_objects
+from collective.purgebyid.interfaces import IInvolvedID
 from collective.purgebyid.purge import UuidPurgePath
-from collective.purgebyid.testing import COLLECTIVE_PURGEBYID_INTEGRATION_TESTING
-from plone.transformchain.zpublisher import applyTransformOnSuccess
-from plone.uuid.interfaces import IAttributeUUID
+from collective.purgebyid.testing import COLLECTIVE_PURGEBYID_FUNCTIONAL_TESTING
+from plone import api
+from plone.app.testing import setRoles
+from plone.app.testing import TEST_USER_ID
+from plone.testing.z2 import Browser
 from plone.uuid.interfaces import IUUID
-from Products.CMFCore.interfaces import IContentish
-from zope.annotation.interfaces import IAnnotations
-from zope.event import notify
-
-# from zope.globalrequest import getRequest
+from Products.Five.browser import BrowserView
+from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
+from zope.component import adapter
+from zope.component import getGlobalSiteManager
+from zope.component import provideAdapter
+from zope.globalrequest import setRequest
+from zope.interface import alsoProvides
 from zope.interface import implementer
-from zope.lifecycleevent import ObjectCreatedEvent
-from ZPublisher.pubevents import PubAfterTraversal
+from zope.interface import Interface
+from zope.publisher.interfaces.browser import IBrowserView
+from zope.publisher.interfaces.browser import IHTTPRequest
 
+import transaction
 import unittest
 
 
-@implementer(IContentish)
-class FauxNonContent(Explicit):
-    def __init__(self, name=None):
-        self.__name__ = name
-        self.__parent__ = None  # may be overridden by acquisition
-
-    def getId(self):
-        return self.__name__
-
-    def virtual_url_path(self):
-        parent = aq_base(self.__parent__)
-        if parent is not None:
-            return parent.virtual_url_path() + "/" + self.__name__
-        else:
-            return self.__name__
-
-    def getPhysicalPath(self):
-        return ("",)
-
-    def getParentNode(self):
-        return FauxNonContent("folder")
-
-
-@implementer(IAttributeUUID)
-class FauxContent(FauxNonContent):
-    portal_type = "testtype"
-
-
-class FauxResponse(object):
-    def __init__(self, body="", headers={}):
-        self._body = body
-        self.headers = headers
-
-    def getBody(self):
-        return self._body
-
-    def setBody(self, body):
-        self._body = body
-
-    def getHeader(self, name):
-        return self.headers.get(name)
-
-    def setHeader(self, name, value):
-        self.headers[name] = value
-
-
-@implementer(IAnnotations)
-class FauxRequest(dict):
-    def __init__(self, published, response=None):
-        if response is None:
-            response = FauxResponse("<html/>")
-
-        self["PUBLISHED"] = published
-        self["PARENTS"] = [published]
-        self.response = response
-        self.environ = {}
-
-
-class FauxPubEvent(object):
-    def __init__(self, request):
-        self.request = request
+class MarkerInterface(Interface):
+    """A marker interface"""
 
 
 class TestContentPurge(unittest.TestCase):
 
-    layer = COLLECTIVE_PURGEBYID_INTEGRATION_TESTING
+    layer = COLLECTIVE_PURGEBYID_FUNCTIONAL_TESTING
 
-    def test_publish_content(self):
-        context = FauxContent("foo")
-        notify(ObjectCreatedEvent(context))
-        request = FauxRequest(context)
-        notify(PubAfterTraversal(request))
-        applyTransformOnSuccess(FauxPubEvent(request))
-        self.assertEqual(
-            "#{}#".format(IUUID(context)), request.response.getHeader("X-Ids-Involved")
+    def setUp(self):
+        self.app = self.layer["app"]
+        self.portal = self.layer["portal"]
+        setRequest(self.portal.REQUEST)
+        setRoles(self.portal, TEST_USER_ID, ("Manager",))
+
+    def test_header_published(self):
+        """Test if the headers are published."""
+        # setRoles(self.portal, TEST_USER_ID, ("Manager",))
+        document = api.content.create(
+            title="Document", id="document", type="Document", container=self.portal
+        )
+        api.content.transition(document, to_state="published")
+        transaction.commit()
+        browser = Browser(self.app)
+        browser.open(document.absolute_url())
+        self.assertTrue("X-Ids-Involved" in browser.headers)
+        uuid = IUUID(document)
+        self.assertEqual("#{}#".format(uuid), browser.headers["X-Ids-Involved"])
+
+    def test_involved_adapter(self):
+        """Test if the headers are published."""
+        setRoles(self.portal, TEST_USER_ID, ("Manager",))
+        document = api.content.create(
+            title="Document", id="document", type="Document", container=self.portal
+        )
+        api.content.transition(document, to_state="published")
+        alsoProvides(document, MarkerInterface)
+        transaction.commit()
+
+        # prepare a dummy adapter
+        @adapter(MarkerInterface)
+        @implementer(IInvolvedID)
+        def document_adapter(obj):
+            uuid = IUUID(obj)
+            return [uuid, "custom-tag-from-adapter"]
+
+        provideAdapter(document_adapter)
+
+        browser = Browser(self.app)
+        browser.open(document.absolute_url())
+        self.assertTrue("X-Ids-Involved" in browser.headers)
+        xkey_header = browser.headers["X-Ids-Involved"]
+        self.assertIn(IUUID(document), xkey_header)
+        self.assertIn("custom-tag-from-adapter", xkey_header)
+
+        # cleanup
+        gsm = getGlobalSiteManager()
+        gsm.unregisterAdapter(
+            factory=document_adapter,
+            provided=IInvolvedID,
         )
 
     def test_purge_content(self):
-        context = FauxContent("foo")
-        notify(ObjectCreatedEvent(context))
-        purger = UuidPurgePath(context)
-        list(purger.getAbsolutePaths())
-        self.assertEqual(
-            ["/@@purgebyid/{}".format(IUUID(context))], list(purger.getAbsolutePaths())
+        document = api.content.create(
+            title="Document", id="document", type="Document", container=self.portal
+        )
+        # notify(ObjectCreatedEvent(context))
+        purger = UuidPurgePath(document)
+        self.assertTrue(
+            "/@@purgebyid/{}".format(IUUID(document)) in list(purger.getAbsolutePaths())
         )
         self.assertEqual([], list(purger.getRelativePaths()))
+
+    def test_helper_view(self):
+        document = api.content.create(
+            title="Document", id="document", type="Document", container=self.portal
+        )
+        api.content.transition(document, to_state="published")
+        # create a bunch of auxiliary objects
+        auxiliary_document = api.content.create(
+            title="Auxiliary document",
+            id="auxiliary-document",
+            type="Document",
+            container=self.portal,
+        )
+        api.content.transition(auxiliary_document, to_state="published")
+        auxiliary_document2 = api.content.create(
+            title="Auxiliary document",
+            id="auxiliary-document2",
+            type="Document",
+            container=self.portal,
+        )
+        api.content.transition(auxiliary_document2, to_state="published")
+        transaction.commit()
+
+        # prepare a specialized view
+        @adapter(Interface, IHTTPRequest)
+        class CustomDocumentView(BrowserView):
+            index = ViewPageTemplateFile("document_with_dependencies.pt")
+
+            def __call__(self):
+                self.auxiliary_document = self.context.aq_parent["auxiliary-document"]
+                self.auxiliary_document2 = self.context.aq_parent["auxiliary-document2"]
+                mark_involved_objects(
+                    self.request,
+                    [
+                        self.auxiliary_document,
+                    ],
+                )
+                mark_involved(self.request, "custom-tag-from-view")
+                return self.index()
+
+        # register the view
+        provideAdapter(
+            CustomDocumentView,
+            adapts=(Interface, IHTTPRequest),
+            provides=IBrowserView,
+            name="special-view",
+        )
+        browser = Browser(self.app)
+        browser.open(document.absolute_url() + "/@@special-view")
+
+        self.assertTrue("X-Ids-Involved" in browser.headers)
+        x_ids_header = browser.headers["X-Ids-Involved"]
+        self.assertIn(IUUID(document), x_ids_header)
+        self.assertIn(IUUID(auxiliary_document), x_ids_header)
+        # auxiliary_document2 is marked in the template
+        self.assertIn(IUUID(auxiliary_document2), x_ids_header)
+        self.assertIn("custom-tag-from-view", x_ids_header)
+        self.assertIn("custom-tag-from-template", x_ids_header)
+
+        # cleanup
+        gsm = getGlobalSiteManager()
+        gsm.unregisterAdapter(
+            factory=CustomDocumentView,
+            provided=IBrowserView,
+        )

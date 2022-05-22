@@ -62,11 +62,7 @@ class MutatorTransform(object):
 
 @adapter(IPubAfterTraversal)
 def handle_request_after_traversal(event):
-    """handle "IPubAfterTraversal".
-
-    TODO: all the objects traversed are involved or only the last (the
-          firstest within request.PARENTS)?
-    """
+    """handle "IPubAfterTraversal"."""
     try:
         markInvolvedObjs(
             event.request, event.request.get("PARENTS", []), stoponfirst=True

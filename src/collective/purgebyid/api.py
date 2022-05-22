@@ -16,35 +16,55 @@ def getInvolvedObjs(request):
     return annotations.get(KEY, None)
 
 
-def markInvolvedObjs(request, objs, stoponfirst=False):
+def mark_involved_objects(request, objs, stoponfirst=False):
+    """Retrieve the involved ids by the given objects. Objects might be
+    ordinary strings, Plone content objects having UID attributes, IUUID.
+
+    :param request: request
+    :param objs: list
+    :type objs: object (string or object that implements IInvolvedID)
+    :param stoponfirst: True only the first object that respond to below rules will be marked as involved.
+    :type stoponfirst: bool, optional
     """
-    Mark the request for involved ids, objs is a list of object that must be:
-        * the object is a string
-        * the object has a UID attribute that is a string (e.g. a catalog
-          brain, AT object, ...
-        * the object implements IUUID
-    In other cases the object will be ignored.
-
-    If ``stoponfirst`` is True only the first object that respond to below
-    rules will be marked as involved.
-    """
-    if objs:
-        for obj in objs:
-            ids = IInvolvedID(obj, None)
-            if ids:
-                if isinstance(ids, basestring) or ids is NOID:
-                    ids = [ids]
-                for id in ids:
-                    markInvolved(request, id)
-                if stoponfirst:
-                    break
-
-
-def markInvolved(request, id):
-    logger.debug("mark request %r with %s" % (request, id))
-    if id is not NOID:
-        annotations = IAnnotations(request)
-        if annotations.get(KEY, None):
-            annotations[KEY].add(id)
+    for obj in objs:
+        if isinstance(obj, basestring):
+            ids = [obj]
         else:
-            annotations[KEY] = set([id])
+            ids = IInvolvedID(obj, None)
+        if ids:
+            if ids is NOID:
+                logger.warning(
+                    "deprecated: the IInvolvedID adapter must return a list of ids"
+                )
+                ids = []
+            if isinstance(ids, basestring):
+                logger.warning(
+                    "deprecated: the IInvolvedID adapter must return a list of ids"
+                )
+                ids = [ids]
+            for id in ids:
+                mark_involved(request, id)
+            if stoponfirst:
+                break
+
+
+def mark_involved(request, id):
+    """Mark an id as being involved for this request.
+
+    :param request: request
+    :param single_id: single involved id
+    :type single_id: basestring
+    """
+    logger.debug("mark request %r with %s", request, id)
+    if id is NOID:
+        return
+    annotations = IAnnotations(request)
+    if annotations.get(KEY, None):
+        annotations[KEY].add(id)
+    else:
+        annotations[KEY] = set([id])
+
+
+# BBB: renamed api
+markInvolvedObjs = mark_involved_objects
+markInvolved = mark_involved
