@@ -50,8 +50,8 @@ class TestContentPurge(unittest.TestCase):
         browser = Browser(self.app)
         browser.open(document.absolute_url())
         self.assertTrue("X-Ids-Involved" in browser.headers)
-        uuid = IUUID(document)
-        self.assertEqual("#{}#".format(uuid), browser.headers["X-Ids-Involved"])
+        ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(document), ids)
 
     def test_involved_adapter(self):
         """Test if the headers are published."""
@@ -75,9 +75,9 @@ class TestContentPurge(unittest.TestCase):
         browser = Browser(self.app)
         browser.open(document.absolute_url())
         self.assertTrue("X-Ids-Involved" in browser.headers)
-        xkey_header = browser.headers["X-Ids-Involved"]
-        self.assertIn(IUUID(document), xkey_header)
-        self.assertIn("custom-tag-from-adapter", xkey_header)
+        ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(document), ids)
+        self.assertIn("custom-tag-from-adapter", ids)
 
         # cleanup
         gsm = getGlobalSiteManager()
@@ -162,13 +162,13 @@ class TestHelperView(unittest.TestCase):
         browser.open(self.document.absolute_url() + "/@@special-view")
 
         self.assertTrue("X-Ids-Involved" in browser.headers)
-        x_ids_header = browser.headers["X-Ids-Involved"]
-        self.assertIn(IUUID(self.document), x_ids_header)
-        self.assertIn(IUUID(self.auxiliary_document), x_ids_header)
+        ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(self.document), ids)
+        self.assertIn(IUUID(self.auxiliary_document), ids)
         # auxiliary_document2 is marked in the template
-        self.assertIn(IUUID(self.auxiliary_document2), x_ids_header)
-        self.assertIn("custom-tag-from-view", x_ids_header)
-        self.assertIn("custom-tag-from-template", x_ids_header)
+        self.assertIn(IUUID(self.auxiliary_document2), ids)
+        self.assertIn("custom-tag-from-view", ids)
+        self.assertIn("custom-tag-from-template", ids)
 
         # cleanup
         gsm = getGlobalSiteManager()
@@ -198,10 +198,10 @@ class TestHelperView(unittest.TestCase):
         browser.open(self.document.absolute_url() + "/@@special-view")
 
         self.assertTrue("X-Ids-Involved" in browser.headers)
-        x_ids_header = browser.headers["X-Ids-Involved"].strip("#").split("#")
-        self.assertIn(IUUID(self.document), x_ids_header)
-        self.assertIn(IUUID(self.auxiliary_document), x_ids_header)
-        self.assertIn(IUUID(self.auxiliary_document2), x_ids_header)
+        ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(self.document), ids)
+        self.assertIn(IUUID(self.auxiliary_document), ids)
+        self.assertIn(IUUID(self.auxiliary_document2), ids)
 
         # cleanup
         gsm = getGlobalSiteManager()
