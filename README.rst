@@ -140,6 +140,7 @@ These methods combined might be used in your views, whenever a certain object or
 Additionally, there is a utility browser view "purgebyid", that can be used in your template as follows:
 
 .. code-block:: xml
+
     <body tal:define="purgeutils nocall:context/@@purgebyid">
     ...
         <tal:image tal:define="image python:context.get_image()" tal:condition="python: image">

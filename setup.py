@@ -18,6 +18,7 @@ setup(
     version=version,
     description="p.a.caching add-on for a better purging policy",
     long_description=long_description,
+    long_description_content_type='text/x-rst',
     # Get more strings from
     # http://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
@@ -29,6 +30,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Development Status :: 5 - Production/Stable",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ],
     keywords="plone caching",
