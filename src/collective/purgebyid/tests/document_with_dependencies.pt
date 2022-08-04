@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <title>Document view with</title>
+    </head>
+    <body tal:define="purgebyid nocall:context/@@purgebyid">
+
+        Document
+
+        <!-- Arbitrary dependencies -->
+        <tal:mark-involved tal:define="dummy python:purgebyid.mark('custom-tag-from-template')" />
+        <tal:mark-involved tal:define="dummy python:purgebyid.mark(view.auxiliary_document2)" />
+
+    </body>
+</html>

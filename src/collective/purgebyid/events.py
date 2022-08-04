@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
+from collective.purgebyid import logger
 from collective.purgebyid.api import getInvolvedObjs
-from collective.purgebyid.api import markInvolvedObjs
+from collective.purgebyid.api import mark_involved_objects
 from plone.transformchain.interfaces import ITransform
 from ZODB.POSException import ConflictError
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 from ZPublisher.interfaces import IPubAfterTraversal
-
-import logging
-
-
-logger = logging.getLogger("collective.purgebyid")
 
 
 @implementer(ITransform)
@@ -62,20 +58,16 @@ class MutatorTransform(object):
 
 @adapter(IPubAfterTraversal)
 def handle_request_after_traversal(event):
-    """handle "IPubAfterTraversal".
-
-    TODO: all the objects traversed are involved or only the last (the
-          firstest within request.PARENTS)?
-    """
+    """handle "IPubAfterTraversal"."""
     try:
-        markInvolvedObjs(
+        mark_involved_objects(
             event.request, event.request.get("PARENTS", []), stoponfirst=True
         )
         # published = event.request.get('PUBLISHED', None)
         # if published:
         #     context = getattr(published, 'context', None)
         #     if context:
-        #         markInvolvedObjs(event.request, [context, ])
+        #         mark_involved_objects(event.request, [context, ])
     except ConflictError:  # pragma: nocover
         raise
     except Exception:  # pragma: nocover

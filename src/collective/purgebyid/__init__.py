@@ -1,4 +1,7 @@
-# -*- extra stuff goes here -*-
+import logging
+
+
+logger = logging.getLogger("collective.purgebyid")
 
 
 def initialize(context):

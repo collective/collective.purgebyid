@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
-from collective.purgebyid.api import NOID
 from collective.purgebyid.interfaces import IInvolvedID
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
@@ -14,9 +13,7 @@ import pkg_resources
 
 try:
     pkg_resources.get_distribution("Products.ResourceRegistries")
-    from Products.ResourceRegistries.interfaces import (
-        IResourceRegistry,
-    )  # pragma: nocover
+    from Products.ResourceRegistries.interfaces import IResourceRegistry  # pragma: nocover
 except pkg_resources.DistributionNotFound:
     HAS_RESOURCEREGISTRY = False
 else:
@@ -25,8 +22,8 @@ else:
 
 @adapter(Interface)
 @implementer(IInvolvedID)
-def contentAdapter(obj):
-    """return uid for context.
+def content_adapter(obj):
+    """return [uid] for context.
 
     * the object is a string
     * the object implements IUUID
@@ -35,7 +32,7 @@ def contentAdapter(obj):
     """
     uuid = None
     if isinstance(obj, str):
-        return obj
+        return [obj]
     obj = aq_base(obj)
     uuid = IUUID(obj, None)
     if uuid is None:
@@ -45,24 +42,24 @@ def contentAdapter(obj):
                 uuid = uuid()
             if not isinstance(uuid, str):
                 uuid = None
-    return uuid
+    return [uuid] if uuid else []
 
 
 @adapter(IResourceDirectory)
 @implementer(IInvolvedID)
-def resourceDirectoryAdapter(context):
+def resource_directory_adapter(context):
     if hasattr(context, "directory"):
         # file system resources
-        return hashlib.sha1(context.directory.encode("utf-8")).hexdigest()  # nosec
+        return [hashlib.sha1(context.directory.encode("utf-8")).hexdigest()]  # nosec
     else:
         # ZODB persistent resources
-        return NOID
+        return []
 
 
 if HAS_RESOURCEREGISTRY:
 
     @adapter(IResourceRegistry)
     @implementer(IInvolvedID)
-    def resourceRegistryAdapter(context):
+    def resource_registry_adapter(context):
         """portal_javascript, portal_css, ..."""
-        return NOID
+        return []

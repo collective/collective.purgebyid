@@ -2,6 +2,7 @@
     xmlns="http://namespaces.zope.org/zope"
     xmlns:five="http://namespaces.zope.org/five"
     xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     i18n_domain="collective.purgebyid">
@@ -10,13 +11,20 @@
 
   <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
 
-  <adapter factory=".adapter.contentAdapter" />
-  <adapter factory=".adapter.resourceDirectoryAdapter" />
-  <adapter zcml:condition="installed Products.ResourceRegistry" factory=".adapter.resourceRegistryAdapter" />
+  <adapter factory=".adapter.content_adapter" />
+  <adapter factory=".adapter.resource_directory_adapter" />
+  <adapter zcml:condition="installed Products.ResourceRegistry" factory=".adapter.resource_registry_adapter" />
 
   <!-- Mutator: plone.transformchain order 11000 -->
   <adapter factory=".events.MutatorTransform" name="collective.purgebyid.mutator" />
 
   <subscriber handler=".events.handle_request_after_traversal" />
+
+  <!-- Utility browser view @@purgebyid -->
+  <browser:page for = "*"
+    name = "purgebyid"
+    class = ".browser.MarkInvolvedView"
+    permission = "zope2.View"
+    />
 
 </configure>

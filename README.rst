@@ -118,6 +118,53 @@ A softpurge differs from a regular purge in that it resets an
 object's TTL but keeps it available for grace mode and conditional
 requests for the remainder of its configured grace and keep time.
 
+How does it work? How to extend it?
+-----------------------------------
+
+During the publishing process all involved IDs (UUIDs and custom IDs) are collected
+(by subscribing to IPubAfterTraversal).
+
+Important are the adapters for IInvolvedddID, which are responsible for collecting IDs for their given context.
+The base implementation looks for the UUIDs, but may be specialized for your custom content types.
+
+Apart from the adapter approach, there is the inline approach. You may call the following methods
+from collective.purgebyid.api:
+
+* mark_involved_objects(request, objs, stoponfirst=False)
+* mark_involved(request, single_id)
+
+Whereas the first method uses internally the adapters for IInvolvedIDs for the given objects,
+the second one allows setting any arbitrary IDs.
+These methods combined might be used in your views, whenever a certain object or part is being rendered.
+
+Additionally, there is a utility browser view "purgebyid", that can be used in your template as follows:
+
+.. code-block:: xml
+    <body tal:define="purgeutils nocall:context/@@purgebyid">
+    ...
+        <tal:image tal:define="image python:context.get_image()" tal:condition="python: image">
+
+            <tal:mark-involved tal:define="dummy python:purgeutils.mark(image)" />
+            <!-- put image rendering here -->
+            ...
+
+        </tal:image>
+    ...
+    </body>
+
+Alternatively, you can again set arbitrary IDs:
+
+.. code-block:: xml
+
+    <tal:mark-involved tal:define="dummy python:purgeutils.mark('my_custom_id')" />
+
+After having collected all IDs a ITransform adapter puts the expected `X-Ids-Involved` header in
+the HTTP response header.
+
+When Plone sends a purge request to the configured Cache Proxy, it sends additionally a specialized
+request for handling objects with tags.
+
+
 References
 ----------
 
