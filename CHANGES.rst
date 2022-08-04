@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.0 (unreleased)
+1.2.0 (2022-08-04)
 ------------------
 
 - collectice.xkey backports. Add utility browser view.
