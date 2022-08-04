@@ -1,8 +1,11 @@
 Changelog
 =========
 
-1.1.3 (unreleased)
+1.2.0 (unreleased)
 ------------------
+
+- collectice.xkey backports. Add utility browser view.
+  [pgrunewald, mamico]
 
 - fix p.a.multilingual IUUID adapter inconsistency
   [mamico]
