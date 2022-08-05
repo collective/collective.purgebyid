@@ -124,7 +124,7 @@ How does it work? How to extend it?
 During the publishing process all involved IDs (UUIDs and custom IDs) are collected
 (by subscribing to IPubAfterTraversal).
 
-Important are the adapters for IInvolvedddID, which are responsible for collecting IDs for their given context.
+Important are the adapters for IInvolvedID, which are responsible for collecting IDs for their given context.
 The base implementation looks for the UUIDs, but may be specialized for your custom content types.
 
 Apart from the adapter approach, there is the inline approach. You may call the following methods
