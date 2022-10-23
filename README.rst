@@ -174,4 +174,4 @@ request for handling objects with tags.
 References
 ----------
 
-* Blog post http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language)
+* Blog post https://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language)
