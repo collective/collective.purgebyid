@@ -1,0 +1,5 @@
+====================
+collective.purgebyid
+====================
+
+User documentation
