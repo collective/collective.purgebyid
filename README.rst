@@ -6,8 +6,13 @@ collective.purgebyid
     :alt: Latest Version
 
 .. image:: https://img.shields.io/pypi/pyversions/collective.purgebyid.svg?style=plastic
-     :alt: Supported - Python Versions
+    :target: https://pypi.python.org/pypi/collective.purgebyid/
+    :alt: Supported - Python Versions
 
+.. image:: https://img.shields.io/pypi/dm/collective.purgebyid.svg
+    :target: https://pypi.python.org/pypi/collective.purgebyid/
+    :alt: Number of PyPI downloads
+    
 .. image:: https://img.shields.io/pypi/l/collective.purgebyid.svg
     :target: https://pypi.python.org/pypi/collective.purgebyid/
     :alt: License
@@ -169,4 +174,4 @@ request for handling objects with tags.
 References
 ----------
 
-* Blog post http://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language)
+* Blog post https://www.biodec.com/it/blog/migliorare-la-gestione-del-purge-caching-in-plone-collective-purgebyid (italian language)
