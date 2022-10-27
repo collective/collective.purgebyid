@@ -13,6 +13,7 @@
 
   <adapter factory=".adapter.content_adapter" />
   <adapter factory=".adapter.resource_directory_adapter" />
+  <adapter factory=".adapter.site_root_adapter" />
   <adapter zcml:condition="installed Products.ResourceRegistry" factory=".adapter.resource_registry_adapter" />
 
   <!-- Mutator: plone.transformchain order 11000 -->

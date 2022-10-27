@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from collective.purgebyid import logger
-from collective.purgebyid.api import getInvolvedObjs
+from collective.purgebyid.api import get_involved_objects
 from collective.purgebyid.api import mark_involved_objects
 from plone.transformchain.interfaces import ITransform
 from ZODB.POSException import ConflictError
@@ -51,7 +51,7 @@ class MutatorTransform(object):
 
     def mutate(self):
         request = self.request
-        involved = getInvolvedObjs(request)
+        involved = get_involved_objects(request)
         if involved:
             request.response.setHeader("X-Ids-Involved", "#" + "#".join(involved) + "#")
 

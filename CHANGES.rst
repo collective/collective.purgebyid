@@ -4,13 +4,16 @@ Changelog
 1.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- plone 6.0 / python 3.10 support
+  [mamico]
 
+- avoid marking requests with the UUID of the plonesite
+  [mamico]
 
 1.2.0 (2022-08-04)
 ------------------
 
-- collectice.xkey backports. Add utility browser view.
+- collective.xkey backports. Add utility browser view.
   [pgrunewald, mamico]
 
 - fix p.a.multilingual IUUID adapter inconsistency
@@ -31,6 +34,7 @@ Changelog
 
 1.1.0 (2018-05-14)
 ------------------
+
 - moved headers mutator from PubSuccess event to plone.transformchain.
   fix missing header using p.a.caching's ramcache operations #2
   [mamico]

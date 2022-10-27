@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from collective.purgebyid.interfaces import IInvolvedID
+import hashlib
+import pkg_resources
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
+from Products.CMFCore.interfaces import ISiteRoot
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
-
-import hashlib
-import pkg_resources
-
 
 try:
     pkg_resources.get_distribution("Products.ResourceRegistries")
@@ -54,6 +53,12 @@ def resource_directory_adapter(context):
     else:
         # ZODB persistent resources
         return []
+
+
+@adapter(ISiteRoot)
+@implementer(IInvolvedID)
+def site_root_adapter(context):
+    return []
 
 
 if HAS_RESOURCEREGISTRY:

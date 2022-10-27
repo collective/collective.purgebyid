@@ -9,7 +9,7 @@ KEY = "collective.purgebyid.involved"
 NOID = object()
 
 
-def getInvolvedObjs(request):
+def get_involved_objects(request):
     annotations = IAnnotations(request)
     return annotations.get(KEY, None)
 
@@ -64,5 +64,6 @@ def mark_involved(request, id):
 
 
 # BBB: renamed api
+getInvolvedObjs = get_involved_objects
 markInvolvedObjs = mark_involved_objects
 markInvolved = mark_involved
