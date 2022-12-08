@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.1 (unreleased)
+1.2.1 (2022-12-08)
 ------------------
 
 - plone 6.0 / python 3.10 support
