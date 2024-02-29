@@ -4,8 +4,8 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- plone 6.0 / python 3.11, 3.12 support
+  [mamico]
 
 1.2.1 (2022-12-08)
 ------------------
