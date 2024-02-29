@@ -35,7 +35,7 @@ def mark_involved_objects(request, objs, stoponfirst=False):
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
                 ids = []
-            if isinstance(ids, basestring):  # pragma: nocover
+            if isinstance(ids, string_types):  # pragma: nocover
                 logger.warning(
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
