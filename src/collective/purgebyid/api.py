@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from collective.purgebyid import logger
 from collective.purgebyid.interfaces import IInvolvedID
-from past.builtins import basestring
+from six import string_types
 from zope.annotation.interfaces import IAnnotations
 
 
@@ -25,7 +25,7 @@ def mark_involved_objects(request, objs, stoponfirst=False):
     :type stoponfirst: bool, optional
     """
     for obj in objs:
-        if isinstance(obj, basestring):
+        if isinstance(obj, string_types):
             ids = [obj]
         else:
             ids = IInvolvedID(obj, None)

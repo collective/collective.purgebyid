@@ -50,6 +50,7 @@ setup(
     install_requires=[
         "setuptools",
         # -*- Extra requirements: -*-
+        "six",
         "plone.uuid",
     ],
     extras_require={"test": ["plone.app.testing", "plone.api", "plone.app.contenttypes"]},
