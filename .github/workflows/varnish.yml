@@ -7,15 +7,15 @@ on:
   pull_request:
 
 jobs:
-   test:
+  test:
     name: Run test suite
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Build container
-      run: docker-compose -f .github/varnish/docker-compose.yml build
+      - name: Build container
+        run: docker compose -f .github/varnish/docker-compose.yml build
 
-    - name: Run tests
-      run: docker-compose -f .github/varnish/docker-compose.yml run ci
+      - name: Run tests
+        run: docker compose -f .github/varnish/docker-compose.yml run ci

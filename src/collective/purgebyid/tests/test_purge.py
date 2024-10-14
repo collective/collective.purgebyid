@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from importlib import import_module
 from collective.purgebyid.api import mark_involved
 from collective.purgebyid.api import mark_involved_objects
 from collective.purgebyid.interfaces import IInvolvedID
@@ -23,6 +24,10 @@ from zope.publisher.interfaces.browser import IHTTPRequest
 
 import transaction
 import unittest
+
+HAS_PLONE_6 = getattr(
+    import_module("Products.CMFPlone.factory"), "PLONE60MARKER", False
+)
 
 
 class MarkerInterface(Interface):
@@ -52,6 +57,16 @@ class TestContentPurge(unittest.TestCase):
         self.assertTrue("X-Ids-Involved" in browser.headers)
         ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
         self.assertIn(IUUID(document), ids)
+
+    @unittest.skipUnless(HAS_PLONE_6, "On Plone6 site root is a content")
+    def test_header_published_on_site_root(self):
+        """Test if the headers are published on site root too."""
+        setRoles(self.portal, TEST_USER_ID, ("Manager",))
+        browser = Browser(self.app)
+        browser.open(self.portal.absolute_url())
+        self.assertTrue("X-Ids-Involved" in browser.headers)
+        ids = browser.headers["X-Ids-Involved"].strip("#").split("#")
+        self.assertIn(IUUID(self.portal), ids)
 
     def test_involved_adapter(self):
         """Test if the headers are published."""
@@ -86,10 +101,17 @@ class TestContentPurge(unittest.TestCase):
             provided=IInvolvedID,
         )
 
+    @unittest.skipIf(HAS_PLONE_6, "On Plone6 site root is a content")
     def test_resource(self):
         browser = Browser(self.app)
         browser.open(self.portal.absolute_url() + "/favicon.ico")
         self.assertFalse("X-Ids-Involved" in browser.headers)
+
+    @unittest.skipUnless(HAS_PLONE_6, "On Plone6 site root is a content")
+    def test_resource_p6(self):
+        browser = Browser(self.app)
+        browser.open(self.portal.absolute_url() + "/favicon.ico")
+        self.assertTrue("X-Ids-Involved" in browser.headers)
 
     def test_purge_content(self):
         document = api.content.create(
