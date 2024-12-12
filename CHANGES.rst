@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.2.3 (unreleased)
+1.2.3 (2024-12-12)
 ------------------
 
 - Do not register IInvolvedID adapter for ISiteRoot on Plone6 because now it is a content with UID.
