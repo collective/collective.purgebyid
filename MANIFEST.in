@@ -3,3 +3,5 @@ graft src
 include *.txt
 include *.rst
 global-exclude *.pyc
+exclude .coveragerc
+exclude bootstrap.py
