@@ -1,35 +1,49 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
-    xmlns:i18n="http://namespaces.zope.org/i18n"
     xmlns:browser="http://namespaces.zope.org/browser"
-    xmlns:zcml="http://namespaces.zope.org/zcml"
+    xmlns:five="http://namespaces.zope.org/five"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-    i18n_domain="collective.purgebyid">
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="collective.purgebyid"
+    >
 
-  <five:registerPackage package="." initialize=".initialize" />
+  <five:registerPackage
+      package="."
+      initialize=".initialize"
+      />
 
-  <adapter factory=".purge.UuidPurgePath" name="collective.purgebyid.uuid" />
+  <adapter
+      factory=".purge.UuidPurgePath"
+      name="collective.purgebyid.uuid"
+      />
 
   <adapter factory=".adapter.content_adapter" />
-  
+
   <configure zcml:condition="not-have plone-60">
     <adapter factory=".adapter.site_root_adapter" />
   </configure>
-  
+
   <adapter factory=".adapter.resource_directory_adapter" />
-  <adapter zcml:condition="installed Products.ResourceRegistry" factory=".adapter.resource_registry_adapter" />
+  <adapter
+      factory=".adapter.resource_registry_adapter"
+      zcml:condition="installed Products.ResourceRegistry"
+      />
 
   <!-- Mutator: plone.transformchain order 11000 -->
-  <adapter factory=".events.MutatorTransform" name="collective.purgebyid.mutator" />
+  <adapter
+      factory=".events.MutatorTransform"
+      name="collective.purgebyid.mutator"
+      />
 
   <subscriber handler=".events.handle_request_after_traversal" />
 
   <!-- Utility browser view @@purgebyid -->
-  <browser:page for = "*"
-    name = "purgebyid"
-    class = ".browser.MarkInvolvedView"
-    permission = "zope2.View"
-    />
+  <browser:page
+      name="purgebyid"
+      for="*"
+      class=".browser.MarkInvolvedView"
+      permission="zope2.View"
+      />
 
 </configure>

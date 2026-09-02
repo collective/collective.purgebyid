@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
 from collective.purgebyid import logger
 from collective.purgebyid.interfaces import IInvolvedID
-from six import string_types
 from zope.annotation.interfaces import IAnnotations
-
 
 KEY = "collective.purgebyid.involved"
 NOID = object()
@@ -25,7 +22,7 @@ def mark_involved_objects(request, objs, stoponfirst=False):
     :type stoponfirst: bool, optional
     """
     for obj in objs:
-        if isinstance(obj, string_types):
+        if isinstance(obj, str):
             ids = [obj]
         else:
             ids = IInvolvedID(obj, None)
@@ -35,7 +32,7 @@ def mark_involved_objects(request, objs, stoponfirst=False):
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
                 ids = []
-            if isinstance(ids, string_types):  # pragma: nocover
+            if isinstance(ids, str):  # pragma: nocover
                 logger.warning(
                     "deprecated: the IInvolvedID adapter must return a list of ids"
                 )
@@ -60,7 +57,7 @@ def mark_involved(request, id):
     if annotations.get(KEY, None):
         annotations[KEY].add(id)
     else:
-        annotations[KEY] = set([id])
+        annotations[KEY] = {id}
 
 
 # BBB: renamed api

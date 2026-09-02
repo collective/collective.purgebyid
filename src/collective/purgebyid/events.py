@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.purgebyid import logger
 from collective.purgebyid.api import get_involved_objects
 from collective.purgebyid.api import mark_involved_objects
@@ -12,7 +11,7 @@ from ZPublisher.interfaces import IPubAfterTraversal
 
 @implementer(ITransform)
 @adapter(Interface, Interface)
-class MutatorTransform(object):
+class MutatorTransform:
     """Transformation using plone.transformchain.
     This is registered at order 11000, i.e. "late". A typical transform
 
