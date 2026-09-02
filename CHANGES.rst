@@ -5,6 +5,9 @@ Changelog
 ------------------
 
 - Configure the package with plone.meta 2.11.1 (tox.ini, pre-commit, GHA workflows).
+  Backwards incompatible: this drops support for Plone < 6.0 and Python < 3.9
+  (previously tested down to Plone 4.3 and Python 2.7/3.7/3.8). Supported
+  versions are now Plone 6.0, 6.1, 6.2, 6.3 on Python 3.9 to 3.14.
   [mamico]
 
 - Switch the ``collective`` namespace to a native PEP 420 namespace package,
