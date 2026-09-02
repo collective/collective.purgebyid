@@ -45,7 +45,7 @@ purged, it will ban all the objects that match an X-Ids-Involved header
 of the right type (i.e. containing the uuid of the resource to purge).
 This means that when a resources is purged, it is enough to purge also
 it /@@purgebyid/<UUID> URL because it will be Varnish responsibily to
-also catch all of the occurrencies of the resources whenever the URL
+also catch all of the occurrences of the resources whenever the URL
 which is used to access it.
 
 Varnish without xkey varnish module

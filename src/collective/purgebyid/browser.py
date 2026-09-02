@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collective.purgebyid.api import mark_involved_objects
 from Products.Five.browser import BrowserView
 

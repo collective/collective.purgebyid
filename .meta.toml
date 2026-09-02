@@ -4,3 +4,6 @@
 [meta]
 template = "default"
 commit-id = "2.11.1"
+
+[pyproject]
+dependencies_ignores = "['Products.ResourceRegistries']"

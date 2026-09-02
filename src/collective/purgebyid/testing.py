@@ -1,20 +1,21 @@
-import collective.purgebyid
-import plone.app.contenttypes
+from plone.app.testing import applyProfile
 from plone.app.testing import FunctionalTesting
 from plone.app.testing import IntegrationTesting
 from plone.app.testing import PLONE_FIXTURE
-from plone.app.testing import applyProfile
 from plone.app.testing import PloneSandboxLayer
 from plone.testing import z2
+
+import collective.purgebyid
+import plone.app.contenttypes
 
 
 class CollectivepurgebyidLayer(PloneSandboxLayer):
 
-    defaultBases = (PLONE_FIXTURE, )
+    defaultBases = (PLONE_FIXTURE,)
 
     def setUpZope(self, app, configurationContext):
         # Install products that use an old-style initialize() function
-        z2.installProduct(app, 'Products.DateRecurringIndex')
+        z2.installProduct(app, "Products.DateRecurringIndex")
         self.loadZCML(package=plone.app.contenttypes)
         self.loadZCML(package=collective.purgebyid)
 
