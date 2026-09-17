@@ -1,6 +1,32 @@
 Changelog
 =========
 
+1.3.0 (unreleased)
+------------------
+
+- Configure the package with plone.meta 2.11.1 (tox.ini, pre-commit, GHA workflows).
+  Backwards incompatible: this drops support for Plone < 6.0 and Python < 3.9
+  (previously tested down to Plone 4.3 and Python 2.7/3.7/3.8). Supported
+  versions are now Plone 6.0, 6.1, 6.2, 6.3 on Python 3.9 to 3.14.
+  [mamico]
+
+- Switch the ``collective`` namespace to a native PEP 420 namespace package,
+  fixing a ``ConfigurationError`` on ``collective.monkeypatcher`` under
+  recent setuptools/Python versions.
+  [mamico]
+
+- Declare all runtime and test dependencies actually imported by the
+  package (``Zope``, ``Products.CMFCore``, ``plone.resource``,
+  ``plone.transformchain``, ``z3c.caching``, ``plone.testing``), drop
+  unused ones (``setuptools``, ``six``).
+  [mamico]
+
+- Remove CI/config leftovers made obsolete by the plone.meta migration:
+  the pre-plone.meta GitHub Actions test workflow, the Bandit workflow
+  (broken, unmaintained Docker image), and the legacy buildout
+  configuration/requirements files.
+  [mamico]
+
 1.2.3 (2024-12-12)
 ------------------
 

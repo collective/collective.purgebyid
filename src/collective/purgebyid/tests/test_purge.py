@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-from importlib import import_module
 from collective.purgebyid.api import mark_involved
 from collective.purgebyid.api import mark_involved_objects
 from collective.purgebyid.interfaces import IInvolvedID
 from collective.purgebyid.purge import UuidPurgePath
 from collective.purgebyid.testing import COLLECTIVE_PURGEBYID_FUNCTIONAL_TESTING
+from importlib import import_module
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
@@ -120,7 +119,7 @@ class TestContentPurge(unittest.TestCase):
         # notify(ObjectCreatedEvent(context))
         purger = UuidPurgePath(document)
         self.assertTrue(
-            "/@@purgebyid/{}".format(IUUID(document)) in list(purger.getAbsolutePaths())
+            f"/@@purgebyid/{IUUID(document)}" in list(purger.getAbsolutePaths())
         )
         self.assertEqual([], list(purger.getRelativePaths()))
 

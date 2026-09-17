@@ -1,8 +1,5 @@
-# -*- coding: utf-8 -*-
 from Acquisition import aq_base
 from collective.purgebyid.interfaces import IInvolvedID
-import hashlib
-import pkg_resources
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
 from Products.CMFCore.interfaces import ISiteRoot
@@ -10,10 +7,13 @@ from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 
+import hashlib
+
 try:
-    pkg_resources.get_distribution("Products.ResourceRegistries")
-    from Products.ResourceRegistries.interfaces import IResourceRegistry  # pragma: nocover
-except pkg_resources.DistributionNotFound:
+    from Products.ResourceRegistries.interfaces import (
+        IResourceRegistry,  # pragma: nocover
+    )
+except ImportError:
     HAS_RESOURCEREGISTRY = False
 else:
     HAS_RESOURCEREGISTRY = True  # pragma: nocover
