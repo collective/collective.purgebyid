@@ -1,7 +1,7 @@
 from setuptools import find_namespace_packages
 from setuptools import setup
 
-version = "1.3.0"
+version = "2.0.0"
 
 long_description = (
     open("README.rst").read() + "\n" + "Contributors\n"

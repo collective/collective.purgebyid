@@ -7,7 +7,7 @@ from importlib import import_module
 from plone import api
 from plone.app.testing import setRoles
 from plone.app.testing import TEST_USER_ID
-from plone.testing.z2 import Browser
+from plone.testing.zope import Browser
 from plone.uuid.interfaces import IUUID
 from Products.Five.browser import BrowserView
 from Products.Five.browser.pagetemplatefile import ViewPageTemplateFile
