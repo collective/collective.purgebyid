@@ -1,8 +1,16 @@
 Changelog
 =========
 
-1.3.0 (unreleased)
+2.0.0 (unreleased)
 ------------------
+
+- Tests: migrate from the deprecated ``plone.testing.z2`` API to
+  ``plone.testing.zope`` (``installProduct``, ``WSGI_SERVER_FIXTURE``, ``Browser``).
+  [mamico]
+
+- Plone < 6.0 and Python 2.7 are no longer supported by 2.x: they remain
+  maintained on the ``1.x`` branch (1.2.x releases).
+  [mamico]
 
 - Configure the package with plone.meta 2.11.1 (tox.ini, pre-commit, GHA workflows).
   Backwards incompatible: this drops support for Plone < 6.0 and Python < 3.9

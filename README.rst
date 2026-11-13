@@ -51,8 +51,8 @@ which is used to access it.
 Compatibility
 -------------
 
-- 1.3.x supports Plone 6.0, 6.1, 6.2 and 6.3, on Python 3.9 to 3.14.
-- 1.2.x supports Plone 4.3, 5.0, 5.1, 5.2 and 6.0, on Python 2.7 and 3.7 to 3.12.
+- 2.x supports Plone 6.0, 6.1, 6.2 and 6.3, on Python 3.9 to 3.14.
+- 1.2.x (branch ``1.x``) supports Plone 4.3, 5.0, 5.1, 5.2 and 6.0, on Python 2.7 and 3.7 to 3.12.
 
 Varnish without xkey varnish module
 -----------------------------------
