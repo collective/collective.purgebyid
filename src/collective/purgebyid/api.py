@@ -2,8 +2,21 @@ from collective.purgebyid import logger
 from collective.purgebyid.interfaces import IInvolvedID
 from zope.annotation.interfaces import IAnnotations
 
+import re
+
 KEY = "collective.purgebyid.involved"
 NOID = object()
+
+# Characters allowed in an involved id. Anything else could break the
+# X-Ids-Involved header format ("#" separator, whitespace for xkey), the
+# regular expression used by Varnish ``ban()``, or the HTTP header itself
+# (CR/LF).
+VALID_ID = re.compile(r"[A-Za-z0-9._-]+")
+
+
+def is_valid_id(id):
+    """Return True if ``id`` can be safely used as an involved id."""
+    return isinstance(id, str) and VALID_ID.fullmatch(id) is not None
 
 
 def get_involved_objects(request):
@@ -46,12 +59,18 @@ def mark_involved_objects(request, objs, stoponfirst=False):
 def mark_involved(request, id):
     """Mark an id as being involved for this request.
 
+    Ids must match ``VALID_ID`` (letters, digits, ``.``, ``_``, ``-``);
+    invalid ids are logged and ignored.
+
     :param request: request
-    :param single_id: single involved id
-    :type single_id: basestring
+    :param id: single involved id
+    :type id: str
     """
     logger.debug("mark request %r with %s", request, id)
     if id is NOID:  # pragma: nocover
+        return
+    if not is_valid_id(id):
+        logger.warning("ignoring invalid involved id %r", id)
         return
     annotations = IAnnotations(request)
     if annotations.get(KEY, None):
