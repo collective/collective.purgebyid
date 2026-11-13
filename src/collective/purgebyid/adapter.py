@@ -2,21 +2,11 @@ from Acquisition import aq_base
 from collective.purgebyid.interfaces import IInvolvedID
 from plone.resource.interfaces import IResourceDirectory
 from plone.uuid.interfaces import IUUID
-from Products.CMFCore.interfaces import ISiteRoot
 from zope.component import adapter
 from zope.interface import implementer
 from zope.interface import Interface
 
 import hashlib
-
-try:
-    from Products.ResourceRegistries.interfaces import (
-        IResourceRegistry,  # pragma: nocover
-    )
-except ImportError:
-    HAS_RESOURCEREGISTRY = False
-else:
-    HAS_RESOURCEREGISTRY = True  # pragma: nocover
 
 
 @adapter(Interface)
@@ -52,19 +42,4 @@ def resource_directory_adapter(context):
         return [hashlib.sha1(context.directory.encode("utf-8")).hexdigest()]  # nosec
     else:
         # ZODB persistent resources
-        return []
-
-
-@adapter(ISiteRoot)
-@implementer(IInvolvedID)
-def site_root_adapter(context):
-    return []
-
-
-if HAS_RESOURCEREGISTRY:
-
-    @adapter(IResourceRegistry)
-    @implementer(IInvolvedID)
-    def resource_registry_adapter(context):
-        """portal_javascript, portal_css, ..."""
         return []

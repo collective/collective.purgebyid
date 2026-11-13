@@ -19,16 +19,7 @@
       />
 
   <adapter factory=".adapter.content_adapter" />
-
-  <configure zcml:condition="not-have plone-60">
-    <adapter factory=".adapter.site_root_adapter" />
-  </configure>
-
   <adapter factory=".adapter.resource_directory_adapter" />
-  <adapter
-      factory=".adapter.resource_registry_adapter"
-      zcml:condition="installed Products.ResourceRegistry"
-      />
 
   <!-- Mutator: plone.transformchain order 11000 -->
   <adapter
