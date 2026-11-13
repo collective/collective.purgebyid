@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.0 (unreleased)
+2.0.0 (2026-11-13)
 ------------------
 
 - Tests: migrate from the deprecated ``plone.testing.z2`` API to
