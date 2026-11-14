@@ -24,6 +24,10 @@ Changelog
   root adapter for Plone < 6.
   [mamico]
 
+- Tests: check that the ``X-Ids-Involved`` header is also sent on streamed
+  responses (``response.write()``, stream iterators, blob downloads).
+  [mamico]
+
 
 2.0.0 (2026-11-13)
 ------------------
