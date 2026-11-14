@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.0 (unreleased)
+2.0.1 (unreleased)
 ------------------
 
 - Cap the ``X-Ids-Involved`` header at 4096 bytes by default, so that large
