@@ -148,6 +148,9 @@ Whereas the first method uses internally the adapters for IInvolvedIDs for the g
 the second one allows setting any arbitrary IDs.
 These methods combined might be used in your views, whenever a certain object or part is being rendered.
 
+IDs may contain only letters, digits, ``.``, ``_`` and ``-``. Other IDs are logged and ignored,
+because they would break the header format or the Varnish ``ban()`` expression.
+
 Additionally, there is a utility browser view "purgebyid", that can be used in your template as follows:
 
 .. code-block:: xml
@@ -172,6 +175,23 @@ Alternatively, you can again set arbitrary IDs:
 
 After having collected all IDs a ITransform adapter puts the expected `X-Ids-Involved` header in
 the HTTP response header.
+
+Header size limit
+-----------------
+
+Proxies limit the size of response headers: Varnish (``http_resp_hdr_len``) and Apache
+default to 8 KB per header, nginx (``proxy_buffer_size``) to 4 KB for all headers.
+A page listing many objects could exceed them and the proxy would return an error.
+
+The ``X-Ids-Involved`` value is therefore capped at 4096 bytes, about 120 UUIDs.
+IDs are sorted; those that do not fit are dropped and a warning is logged.
+Responses with dropped IDs are not invalidated when those objects change,
+so keep their cache TTL short or mark fewer objects.
+
+Set the ``COLLECTIVE_PURGEBYID_MAX_HEADER_LENGTH`` environment variable to change the limit,
+or to ``0`` to disable it::
+
+    COLLECTIVE_PURGEBYID_MAX_HEADER_LENGTH=7000
 
 When Plone sends a purge request to the configured Cache Proxy, it sends additionally a specialized
 request for handling objects with tags.

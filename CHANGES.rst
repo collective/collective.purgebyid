@@ -4,7 +4,30 @@ Changelog
 2.0.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Cap the ``X-Ids-Involved`` header at 4096 bytes by default, so that large
+  listings no longer produce headers that Varnish, Apache or nginx reject.
+  Ids that do not fit are dropped and a warning is logged. The limit can be
+  changed with the ``COLLECTIVE_PURGEBYID_MAX_HEADER_LENGTH`` environment
+  variable (``0`` disables it). Ids in the header are now sorted, so its
+  value is stable across requests.
+  [mamico]
+
+- Validate involved ids: only letters, digits, ``.``, ``_`` and ``-`` are
+  accepted. Other ids (whitespace, ``#``, CR/LF, regular expression
+  metacharacters, non-strings) are logged and ignored, because they would
+  break the header format, the Varnish ``ban()`` expression or the HTTP
+  header itself.
+  [mamico]
+
+- Remove dead code: the ``IResourceRegistry`` adapter (its ZCML condition
+  named a non-existent ``Products.ResourceRegistry`` package) and the site
+  root adapter for Plone < 6. ``Products.CMFCore`` is no longer a direct
+  dependency.
+  [mamico]
+
+- Tests: check that the ``X-Ids-Involved`` header is also sent on streamed
+  responses (``response.write()``, stream iterators, blob downloads).
+  [mamico]
 
 
 2.0.0 (2026-11-13)

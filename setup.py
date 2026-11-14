@@ -53,7 +53,6 @@ setup(
     install_requires=[
         # -*- Extra requirements: -*-
         "Zope",
-        "Products.CMFCore",
         "plone.uuid",
         "plone.resource",
         "plone.transformchain",
@@ -64,6 +63,7 @@ setup(
             "plone.app.testing",
             "plone.api",
             "plone.app.contenttypes",
+            "plone.namedfile",
             "plone.testing",
         ]
     },
