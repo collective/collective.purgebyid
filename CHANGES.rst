@@ -21,7 +21,8 @@ Changelog
 
 - Remove dead code: the ``IResourceRegistry`` adapter (its ZCML condition
   named a non-existent ``Products.ResourceRegistry`` package) and the site
-  root adapter for Plone < 6.
+  root adapter for Plone < 6. ``Products.CMFCore`` is no longer a direct
+  dependency.
   [mamico]
 
 - Tests: check that the ``X-Ids-Involved`` header is also sent on streamed
